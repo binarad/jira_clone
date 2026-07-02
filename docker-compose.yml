@@ -1,0 +1,36 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: jira_postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: jira_db
+    ports: 
+      # Force IPv4 binding for the database
+      - "127.0.0.1:5432:5432"
+    volumes: 
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d jira_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin_ui
+    restart: always
+    environment: 
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: adminpassword
+    ports:
+      # Force Docker Desktop to bind to IPv4 on your Windows machine
+      - "127.0.0.1:8080:80"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes: 
+  postgres_data:

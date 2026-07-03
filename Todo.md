@@ -1,5 +1,10 @@
 # Rust Jira Clone (Iced + sqlx + Postgres) - Master Roadmap
 
+## **Reading**
+- [ ] "Zero to Production in Rust" for robust architecture patterns.
+- [ ] "Domain Modeling Made Functional" for type-driven domain design.
+- [ ] Study state machines in Rust using enums and compile-time pattern matching.
+
 ## **Phase 0: Preparations & Tooling**
 - [ ] Set up rust-analyzer in your editor for strict type-checking and macro expansion (crucial for `sqlx`).
 - [ ] Read up on the Elm Architecture (Model-Update-View) used by Iced.

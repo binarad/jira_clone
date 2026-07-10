@@ -9,15 +9,15 @@
 - [ ] Set up rust-analyzer in your editor for strict type-checking and macro expansion (crucial for `sqlx`).
 - [ ] Read up on the Elm Architecture (Model-Update-View) used by Iced.
 - [ ] Review `sqlx` documentation on compile-time checked queries.
-- [ ] Create the `docker-compose.yml` for local PostgreSQL development.
+- [x] Create the `docker-compose.yml` for local PostgreSQL development.
 
 ## **Phase 1: Data Layer & Schema (The Foundation)**
-- [ ] Initialize Cargo workspace (`core`, `db`, `gui` crates for clean separation).
-- [ ] Configure `.env` and `DATABASE_URL`.
-- [ ] **Write SQL Migrations:**
-  - [ ] `users` table (id, username, role).
-  - [ ] `projects` table (id, key like 'ENG', name).
-  - [ ] `issues` table (id, project_id, title, description, status, priority, assignee_id).
+- [x] Initialize Cargo workspace (`core`, `db`, `gui` crates for clean separation).
+- [x] Configure `.env` and `DATABASE_URL`.
+- [x] **Write SQL Migrations:**
+  - [x] `users` table (id, username, role).
+  - [x] `projects` table (id, key like 'ENG', name).
+  - [x] `issues` table (id, project_id, title, description, status, priority, assignee_id).
 - [ ] **Implement Database Access:**
   - [ ] Write `sqlx` functions for fetching a project's issues.
   - [ ] Write `sqlx` functions for creating and updating issues.

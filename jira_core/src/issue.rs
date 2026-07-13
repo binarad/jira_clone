@@ -1,0 +1,81 @@
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use std::str::FromStr;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Issue {
+    pub id: i32,
+    pub project_id: i32,
+    pub issue_number: i32,
+    pub summary: String,
+    pub description: Option<String>,
+    pub status: IssueStatus,
+    pub priority: IssuePriority,
+    pub assignee_id: Option<i32>,
+    pub created_at: chrono::DateTime<chrono::Utc>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum IssueStatus {
+    Open,
+    InProgress,
+    Resolved,
+    Closed,
+}
+
+impl IssueStatus {
+    pub fn as_str(&self) -> &str {
+        match self {
+            IssueStatus::Open => "Open",
+            IssueStatus::InProgress => "InProgress",
+            IssueStatus::Resolved => "Resolved",
+            IssueStatus::Closed => "Closed",
+        }
+    }
+}
+impl FromStr for IssueStatus {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Open" => Ok(IssueStatus::Open),
+            "InProgress" => Ok(IssueStatus::InProgress),
+            "Resolved" => Ok(IssueStatus::Resolved),
+            "Closed" => Ok(IssueStatus::Closed),
+            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum IssuePriority {
+    Low,
+    Medium,
+    High,
+    Urgent,
+}
+
+impl IssuePriority {
+    pub fn as_str(&self) -> &str {
+        match self {
+            IssuePriority::Low => "Low",
+            IssuePriority::Medium => "Medium",
+            IssuePriority::High => "High",
+            IssuePriority::Urgent => "Urgent",
+        }
+    }
+}
+
+impl FromStr for IssuePriority {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Low" => Ok(IssuePriority::Low),
+            "Medium" => Ok(IssuePriority::Medium),
+            "High" => Ok(IssuePriority::High),
+            "Urgent" => Ok(IssuePriority::Urgent),
+            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
+        }
+    }
+}

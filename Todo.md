@@ -18,10 +18,10 @@
   - [x] `users` table (id, username, role).
   - [x] `projects` table (id, key like 'ENG', name).
   - [x] `issues` table (id, project_id, title, description, status, priority, assignee_id).
-- [ ] **Implement Database Access:**
-  - [ ] Write `sqlx` functions for fetching a project's issues.
-  - [ ] Write `sqlx` functions for creating and updating issues.
-- [ ] **Data Testing:** Write `#[tokio::test]` unit tests to verify CRUD operations against a test database before touching the GUI.
+- [x] **Implement Database Access:**
+  - [x] Write `sqlx` functions for fetching a project's issues.
+  - [x] Write `sqlx` functions for creating and updating issues.
+- [x] **Data Testing:** Write `#[tokio::test]` unit tests to verify CRUD operations against a test database before touching the GUI.
 
 ## **Phase 2: Core State Logic (The Brain)**
 - [ ] Define the `State` struct: needs to hold the `PgPool`, the currently loaded `Project`, and navigation state (e.g., `BoardView`, `SettingsView`).

@@ -3,6 +3,19 @@ use jira_core::issue::{Issue, IssuePriority, IssueStatus};
 use sqlx::PgPool;
 use std::str::FromStr;
 
+pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32, DbError> {
+    let new_project = sqlx::query!(
+        "INSERT INTO projects (name, key, created_at) VALUES ($1, $2, $3) RETURNING id",
+        name,
+        key,
+        chrono::Utc::now()
+    )
+    .fetch_one(pool)
+    .await?;
+    // To-Do maybe make a better validation for creating a new project via match?
+    Ok(new_project.id)
+}
+
 pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
         .fetch_all(pool)

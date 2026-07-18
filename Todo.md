@@ -22,8 +22,9 @@
 - [x] create_issue
 - [x] update_issue
 
-### Implement Database Access (Projects):
-- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>
+
+## Implement Database Access (Projects):
+- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
 - [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
 - [ ] Write delete_project(pool, id) -> Result<(), DbError>
 - [ ] Write tests for Project CRUD.

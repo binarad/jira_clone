@@ -14,3 +14,4 @@ mod tests {
 }
 
 pub mod issue;
+pub mod project;

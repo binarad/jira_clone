@@ -42,12 +42,15 @@ mod tests {
             id: 0, // Ignored by create_issue
             project_id: new_project_id,
             issue_number: 1,
+            issue_type: IssueType::Task,
             summary: "Original Title".to_string(),
             description: Some("Original Description".to_string()),
             status: IssueStatus::Open,
             priority: IssuePriority::Low,
             assignee_id: None,
+            reporter_id: 1,
             created_at: chrono::Utc::now(),
+            updated_at: chrono::Utc::now(),
         };
 
         // 3. Insert it into the database

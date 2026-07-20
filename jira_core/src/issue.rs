@@ -7,12 +7,21 @@ pub struct Issue {
     pub id: i32,
     pub project_id: i32,
     pub issue_number: i32,
+
+    // Issue metadata
+    pub issue_type: IssueType,
     pub summary: String,
     pub description: Option<String>,
     pub status: IssueStatus,
     pub priority: IssuePriority,
+
+    // Users involved
     pub assignee_id: Option<i32>,
+    pub reporter_id: i32,
+
+    // Timestamps
     pub created_at: chrono::DateTime<chrono::Utc>,
+    pub updated_at: chrono::DateTime<chrono::Utc>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -42,7 +51,7 @@ impl FromStr for IssueStatus {
             "InProgress" => Ok(IssueStatus::InProgress),
             "Resolved" => Ok(IssueStatus::Resolved),
             "Closed" => Ok(IssueStatus::Closed),
-            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
+            _ => Err(anyhow::anyhow!("Invalid issue status: {s}")),
         }
     }
 }
@@ -75,7 +84,37 @@ impl FromStr for IssuePriority {
             "Medium" => Ok(IssuePriority::Medium),
             "High" => Ok(IssuePriority::High),
             "Urgent" => Ok(IssuePriority::Urgent),
-            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
+            _ => Err(anyhow::anyhow!("Invalid issue priority: {s}")),
+        }
+    }
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+pub enum IssueType {
+    Bug,
+    Task,
+    Feature,
+}
+
+impl IssueType {
+    pub fn as_str(&self) -> &str {
+        match self {
+            IssueType::Bug => "Bug",
+            IssueType::Task => "Task",
+            IssueType::Feature => "Feature",
+        }
+    }
+}
+
+impl FromStr for IssueType {
+    type Err = anyhow::Error;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s {
+            "Bug" => Ok(IssueType::Bug),
+            "Task" => Ok(IssueType::Task),
+            "Feature" => Ok(IssueType::Feature),
+            _ => Err(anyhow::anyhow!("Invalid issue type: {s}")),
         }
     }
 }

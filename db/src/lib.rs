@@ -2,6 +2,8 @@
 mod tests {
     use sqlx::PgPool;
 
+    use crate::operations::{create_project, get_user_projects};
+
     #[tokio::test]
     async fn test_fetch_issues() {
         dotenvy::dotenv().ok();
@@ -131,6 +133,51 @@ mod tests {
     //     );
     //     assert!(result > 0);
     // }
+
+    #[tokio::test]
+    async fn test_project_crud_workflow() {
+        dotenvy::dotenv().ok();
+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+        let pool = PgPool::connect(&db_url).await.unwrap();
+
+        let user_record = sqlx::query!(
+            "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING id",
+            "project_tester",
+            "admin",
+            "tester@test.com",
+            "hash"
+        ).fetch_optional(&pool).await.unwrap();
+
+        let user_id = match user_record {
+            Some(record) => record.id,
+            None => {
+                sqlx::query!("SELECT id FROM users WHERE username = 'project_tester'")
+                    .fetch_one(&pool)
+                    .await
+                    .unwrap()
+                    .id
+            }
+        };
+
+        let timestamp = chrono::Utc::now().timestamp_subsec_nanos();
+        let project_key = format!("T{timestamp}", timestamp = timestamp % 100000);
+        let project_name = format!("Test Project {}", timestamp);
+
+        let project_id = create_project(&pool, &project_name, &project_key, user_id)
+            .await
+            .expect("Failed to create project");
+
+        assert!(project_id > 0, "Project id should be valid");
+
+        let user_project = get_user_projects(&pool, user_id)
+            .await
+            .expect("Failed to fetch user projects");
+
+        assert!(
+            user_project.iter().any(|p| p.id == project_id),
+            "Newly created project should be appear in user's project list"
+        );
+    }
 }
 
 pub mod operations;

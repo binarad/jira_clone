@@ -1,290 +1,475 @@
+diff --git a/.gitignore b/.gitignore
+index 3582f2c..dd8b5a7 100644
+--- a/.gitignore
++++ b/.gitignore
+@@ -1,2 +1,3 @@
+ /target
+ ./Cargo.lock
++./diff.txt
 diff --git a/Todo.md b/Todo.md
-index 7c10465..580eb35 100644
+index 580eb35..93d7097 100644
 --- a/Todo.md
 +++ b/Todo.md
-@@ -24,7 +24,7 @@
- 
+@@ -25,10 +25,10 @@
  
  ## Implement Database Access (Projects):
--- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
-+- [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
- - [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
- - [ ] Write delete_project(pool, id) -> Result<(), DbError>
- - [ ] Write tests for Project CRUD.
+ - [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+-- [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
+-- [ ] Write delete_project(pool, id) -> Result<(), DbError>
+-- [ ] Write tests for Project CRUD.
+-- [ ] Implement Database Access (Users):
++- [x] Write get_user_projects(pool, user_id) -> Result<Vec<Project>, DbError>
++- [x] Write delete_project(pool, id) -> Result<(), DbError>
++- [x] Write tests for Project CRUD.
++### Implement Database Access (Users):
+ - [ ] Write create_user(...) and get_all_users(...).
+ - [ ] Write tests for User CRUD.
+ 
 diff --git a/db/src/lib.rs b/db/src/lib.rs
-index ccddeed..d77c143 100644
+index d77c143..e081de1 100644
 --- a/db/src/lib.rs
 +++ b/db/src/lib.rs
-@@ -42,12 +42,15 @@ mod tests {
-             id: 0, // Ignored by create_issue
-             project_id: new_project_id,
-             issue_number: 1,
-+            issue_type: IssueType::Task,
-             summary: "Original Title".to_string(),
-             description: Some("Original Description".to_string()),
-             status: IssueStatus::Open,
-             priority: IssuePriority::Low,
-             assignee_id: None,
-+            reporter_id: 1,
-             created_at: chrono::Utc::now(),
-+            updated_at: chrono::Utc::now(),
-         };
+@@ -2,6 +2,8 @@
+ mod tests {
+     use sqlx::PgPool;
  
-         // 3. Insert it into the database
++    use crate::operations::{create_project, get_user_projects};
++
+     #[tokio::test]
+     async fn test_fetch_issues() {
+         dotenvy::dotenv().ok();
+@@ -131,6 +133,51 @@ mod tests {
+     //     );
+     //     assert!(result > 0);
+     // }
++
++    #[tokio::test]
++    async fn test_project_crud_workflow() {
++        dotenvy::dotenv().ok();
++        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
++        let pool = PgPool::connect(&db_url).await.unwrap();
++
++        let user_record = sqlx::query!(
++            "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING id",
++            "project_tester",
++            "admin",
++            "tester@test.com",
++            "hash"
++        ).fetch_optional(&pool).await.unwrap();
++
++        let user_id = match user_record {
++            Some(record) => record.id,
++            None => {
++                sqlx::query!("SELECT id FROM users WHERE username = 'project_tester'")
++                    .fetch_one(&pool)
++                    .await
++                    .unwrap()
++                    .id
++            }
++        };
++
++        let timestamp = chrono::Utc::now().timestamp_subsec_nanos();
++        let project_key = format!("T{timestamp}", timestamp = timestamp % 100000);
++        let project_name = format!("Test Project {}", timestamp);
++
++        let project_id = create_project(&pool, &project_name, &project_key, user_id)
++            .await
++            .expect("Failed to create project");
++
++        assert!(project_id > 0, "Project id should be valid");
++
++        let user_project = get_user_projects(&pool, user_id)
++            .await
++            .expect("Failed to fetch user projects");
++
++        assert!(
++            user_project.iter().any(|p| p.id == project_id),
++            "Newly created project should be appear in user's project list"
++        );
++    }
+ }
+ 
+ pub mod operations;
 diff --git a/db/src/operations.rs b/db/src/operations.rs
-index 9dae91d..b6bcdca 100644
+index b6bcdca..513032a 100644
 --- a/db/src/operations.rs
 +++ b/db/src/operations.rs
-@@ -1,14 +1,20 @@
+@@ -1,5 +1,6 @@
  use crate::DbError;
--use jira_core::issue::{Issue, IssuePriority, IssueStatus};
-+use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+ use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
++use jira_core::project::Project;
  use sqlx::PgPool;
  use std::str::FromStr;
  
--pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32, DbError> {
-+pub async fn create_project(
-+    pool: &PgPool,
-+    name: &str,
-+    key: &str,
-+    owner_id: i32,
-+) -> Result<i32, DbError> {
-     let new_project = sqlx::query!(
--        "INSERT INTO projects (name, key, created_at) VALUES ($1, $2, $3) RETURNING id",
-+        "INSERT INTO projects (name, key, created_at, owner_id) VALUES ($1, $2, $3, $4) RETURNING id",
-         name,
-         key,
--        chrono::Utc::now()
-+        chrono::Utc::now(),
-+        owner_id,
-     )
-     .fetch_one(pool)
-     .await?;
-@@ -16,6 +22,8 @@ pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32,
+@@ -22,7 +23,67 @@ pub async fn create_project(
      Ok(new_project.id)
  }
  
-+// pub async fn get_all_projects(pool: &PgPool)  {}
+-// pub async fn get_all_projects(pool: &PgPool)  {}
++// MAYBE I'll use it later
++//
++// pub async fn get_all_projects_by_owner(
++//     pool: &PgPool,
++//     user_id: i32,
++// ) -> Result<Vec<Project>, DbError> {
++//     let records = sqlx::query!("SELECT * FROM projects WHERE owner_id = $1", user_id)
++//         .fetch_all(pool)
++//         .await?;
++//
++//     let mut filtered_projects = Vec::new();
++//
++//     for record in records {
++//         filtered_projects.push(Project {
++//             id: record.id,
++//             name: record.name,
++//             key: record.key,
++//             owner_id: record.owner_id,
++//             created_at: record.created_at,
++//         });
++//     }
++//     Ok(filtered_projects)
++// }
 +
++pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
++    // We use DISTINCT in case user has multiple roles
++    let records = sqlx::query!(
++        r#"
++    SELECT DISTINCT p.id, p.name, p.key, p.owner_id, p.created_at 
++    FROM projects p
++    LEFT JOIN issues i ON p.id = i.project_id
++    WHERE p.owner_id = $1
++        OR i.assignee_id = $1
++        OR i.reporter_id = $1
++        "#,
++        user_id
++    )
++    .fetch_all(pool)
++    .await?;
++
++    let mut projects = Vec::new();
++    for record in records {
++        projects.push(Project {
++            id: record.id,
++            name: record.name,
++            key: record.key,
++            owner_id: record.owner_id,
++            created_at: record.created_at,
++        });
++    }
++
++    Ok(projects)
++}
++
++pub async fn delete_project(pool: &PgPool, project_id: i32) -> Result<(), DbError> {
++    sqlx::query!("DELETE FROM projects WHERE id = $1", project_id)
++        .execute(pool)
++        .await?;
++
++    Ok(())
++}
+ 
  pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
      let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
-         .fetch_all(pool)
-@@ -27,14 +35,23 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
-             id: record.id,
-             project_id: record.project_id,
-             issue_number: record.issue_number,
-+            // Issue Metadata
-+            issue_type: IssueType::from_str(&record.issue_type)
-+                .map_err(|_| anyhow::anyhow!("Invalid issue type: {}", record.issue_type))?,
-             summary: record.summary,
-             description: record.description,
-             status: IssueStatus::from_str(&record.status)
-                 .map_err(|_| anyhow::anyhow!("Invalid issue status: {}", record.status))?,
-             priority: IssuePriority::from_str(&record.priority)
-                 .map_err(|_| anyhow::anyhow!("Invalid issue priority: {}", record.priority))?,
-+
-+            // Users involved
-             assignee_id: record.assignee_id,
-+            reporter_id: record.reporter_id,
-+
-+            // Timestamps
-             created_at: record.created_at,
-+            updated_at: record.updated_at,
-         };
-         issues.push(issue);
-     }
-@@ -45,18 +62,20 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
- pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
-     let status_str = issue.status.as_str();
-     let priority_str = issue.priority.as_str();
-+    let issue_type_str = issue.issue_type.as_str();
-     let result = sqlx::query!(
--        "INSERT INTO issues (project_id, issue_number, summary, description, status, priority, assignee_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
-+        "INSERT INTO issues (project_id, issue_number, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
-         issue.project_id,
-         issue.issue_number,
-+        issue_type_str,
-         issue.summary,
-         issue.description.as_deref(),
-         status_str,
--        // issue.status.as_str(),
--        // issue.priority.as_str(),
-         priority_str,
-         issue.assignee_id,
-+        issue.reporter_id,
-         issue.created_at,
-+        issue.updated_at,
-     )
-     .fetch_one(pool)
-     .await?;
-@@ -66,16 +85,20 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError>
- pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
-     let status_str = issue.status.as_str();
-     let priority_str = issue.priority.as_str();
-+    let issue_type_str = issue.issue_type.as_str();
-     let result = sqlx::query!(
--        "UPDATE issues SET project_id = $1, issue_number = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, created_at = $8 WHERE id = $9 RETURNING id",
-+        "UPDATE issues SET project_id = $1, issue_number = $2, issue_type = $3, summary = $4, description = $5, status = $6, priority = $7, assignee_id = $8, reporter_id = $9, created_at = $10, updated_at = $11 WHERE id = $12 RETURNING id",
-         issue.project_id,
-         issue.issue_number,
-+        issue_type_str,
-         issue.summary,
-         issue.description.as_deref(),
-         status_str,
-         priority_str,
-         issue.assignee_id,
-+        issue.reporter_id,
-         issue.created_at,
-+        issue.updated_at,
-         issue.id,
-     )
-     .fetch_one(pool)
-diff --git a/jira_core/src/issue.rs b/jira_core/src/issue.rs
-index b261b12..0b2fa42 100644
---- a/jira_core/src/issue.rs
-+++ b/jira_core/src/issue.rs
-@@ -7,12 +7,21 @@ pub struct Issue {
-     pub id: i32,
-     pub project_id: i32,
-     pub issue_number: i32,
-+
-+    // Issue metadata
-+    pub issue_type: IssueType,
-     pub summary: String,
-     pub description: Option<String>,
-     pub status: IssueStatus,
-     pub priority: IssuePriority,
-+
-+    // Users involved
-     pub assignee_id: Option<i32>,
-+    pub reporter_id: i32,
-+
-+    // Timestamps
-     pub created_at: chrono::DateTime<chrono::Utc>,
-+    pub updated_at: chrono::DateTime<chrono::Utc>,
- }
- 
- #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-@@ -42,7 +51,7 @@ impl FromStr for IssueStatus {
-             "InProgress" => Ok(IssueStatus::InProgress),
-             "Resolved" => Ok(IssueStatus::Resolved),
-             "Closed" => Ok(IssueStatus::Closed),
--            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
-+            _ => Err(anyhow::anyhow!("Invalid issue status: {s}")),
-         }
-     }
- }
-@@ -75,7 +84,37 @@ impl FromStr for IssuePriority {
-             "Medium" => Ok(IssuePriority::Medium),
-             "High" => Ok(IssuePriority::High),
-             "Urgent" => Ok(IssuePriority::Urgent),
--            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
-+            _ => Err(anyhow::anyhow!("Invalid issue priority: {s}")),
-+        }
-+    }
-+}
-+
-+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-+pub enum IssueType {
-+    Bug,
-+    Task,
-+    Feature,
-+}
-+
-+impl IssueType {
-+    pub fn as_str(&self) -> &str {
-+        match self {
-+            IssueType::Bug => "Bug",
-+            IssueType::Task => "Task",
-+            IssueType::Feature => "Feature",
-+        }
-+    }
-+}
-+
-+impl FromStr for IssueType {
-+    type Err = anyhow::Error;
-+
-+    fn from_str(s: &str) -> Result<Self, Self::Err> {
-+        match s {
-+            "Bug" => Ok(IssueType::Bug),
-+            "Task" => Ok(IssueType::Task),
-+            "Feature" => Ok(IssueType::Feature),
-+            _ => Err(anyhow::anyhow!("Invalid issue type: {s}")),
-         }
-     }
- }
+diff --git a/diff.txt b/diff.txt
+index 8ded169..09f8f24 100644
+--- a/diff.txt
++++ b/diff.txt
+@@ -1,290 +0,0 @@
+-diff --git a/Todo.md b/Todo.md
+-index 7c10465..580eb35 100644
+---- a/Todo.md
+-+++ b/Todo.md
+-@@ -24,7 +24,7 @@
+- 
+- 
+- ## Implement Database Access (Projects):
+--- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+-+- [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+- - [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
+- - [ ] Write delete_project(pool, id) -> Result<(), DbError>
+- - [ ] Write tests for Project CRUD.
+-diff --git a/db/src/lib.rs b/db/src/lib.rs
+-index ccddeed..d77c143 100644
+---- a/db/src/lib.rs
+-+++ b/db/src/lib.rs
+-@@ -42,12 +42,15 @@ mod tests {
+-             id: 0, // Ignored by create_issue
+-             project_id: new_project_id,
+-             issue_number: 1,
+-+            issue_type: IssueType::Task,
+-             summary: "Original Title".to_string(),
+-             description: Some("Original Description".to_string()),
+-             status: IssueStatus::Open,
+-             priority: IssuePriority::Low,
+-             assignee_id: None,
+-+            reporter_id: 1,
+-             created_at: chrono::Utc::now(),
+-+            updated_at: chrono::Utc::now(),
+-         };
+- 
+-         // 3. Insert it into the database
+-diff --git a/db/src/operations.rs b/db/src/operations.rs
+-index 9dae91d..b6bcdca 100644
+---- a/db/src/operations.rs
+-+++ b/db/src/operations.rs
+-@@ -1,14 +1,20 @@
+- use crate::DbError;
+--use jira_core::issue::{Issue, IssuePriority, IssueStatus};
+-+use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+- use sqlx::PgPool;
+- use std::str::FromStr;
+- 
+--pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32, DbError> {
+-+pub async fn create_project(
+-+    pool: &PgPool,
+-+    name: &str,
+-+    key: &str,
+-+    owner_id: i32,
+-+) -> Result<i32, DbError> {
+-     let new_project = sqlx::query!(
+--        "INSERT INTO projects (name, key, created_at) VALUES ($1, $2, $3) RETURNING id",
+-+        "INSERT INTO projects (name, key, created_at, owner_id) VALUES ($1, $2, $3, $4) RETURNING id",
+-         name,
+-         key,
+--        chrono::Utc::now()
+-+        chrono::Utc::now(),
+-+        owner_id,
+-     )
+-     .fetch_one(pool)
+-     .await?;
+-@@ -16,6 +22,8 @@ pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32,
+-     Ok(new_project.id)
+- }
+- 
+-+// pub async fn get_all_projects(pool: &PgPool)  {}
+-+
+- pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
+-     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
+-         .fetch_all(pool)
+-@@ -27,14 +35,23 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
+-             id: record.id,
+-             project_id: record.project_id,
+-             issue_number: record.issue_number,
+-+            // Issue Metadata
+-+            issue_type: IssueType::from_str(&record.issue_type)
+-+                .map_err(|_| anyhow::anyhow!("Invalid issue type: {}", record.issue_type))?,
+-             summary: record.summary,
+-             description: record.description,
+-             status: IssueStatus::from_str(&record.status)
+-                 .map_err(|_| anyhow::anyhow!("Invalid issue status: {}", record.status))?,
+-             priority: IssuePriority::from_str(&record.priority)
+-                 .map_err(|_| anyhow::anyhow!("Invalid issue priority: {}", record.priority))?,
+-+
+-+            // Users involved
+-             assignee_id: record.assignee_id,
+-+            reporter_id: record.reporter_id,
+-+
+-+            // Timestamps
+-             created_at: record.created_at,
+-+            updated_at: record.updated_at,
+-         };
+-         issues.push(issue);
+-     }
+-@@ -45,18 +62,20 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
+- pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
+-     let status_str = issue.status.as_str();
+-     let priority_str = issue.priority.as_str();
+-+    let issue_type_str = issue.issue_type.as_str();
+-     let result = sqlx::query!(
+--        "INSERT INTO issues (project_id, issue_number, summary, description, status, priority, assignee_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+-+        "INSERT INTO issues (project_id, issue_number, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
+-         issue.project_id,
+-         issue.issue_number,
+-+        issue_type_str,
+-         issue.summary,
+-         issue.description.as_deref(),
+-         status_str,
+--        // issue.status.as_str(),
+--        // issue.priority.as_str(),
+-         priority_str,
+-         issue.assignee_id,
+-+        issue.reporter_id,
+-         issue.created_at,
+-+        issue.updated_at,
+-     )
+-     .fetch_one(pool)
+-     .await?;
+-@@ -66,16 +85,20 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError>
+- pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
+-     let status_str = issue.status.as_str();
+-     let priority_str = issue.priority.as_str();
+-+    let issue_type_str = issue.issue_type.as_str();
+-     let result = sqlx::query!(
+--        "UPDATE issues SET project_id = $1, issue_number = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, created_at = $8 WHERE id = $9 RETURNING id",
+-+        "UPDATE issues SET project_id = $1, issue_number = $2, issue_type = $3, summary = $4, description = $5, status = $6, priority = $7, assignee_id = $8, reporter_id = $9, created_at = $10, updated_at = $11 WHERE id = $12 RETURNING id",
+-         issue.project_id,
+-         issue.issue_number,
+-+        issue_type_str,
+-         issue.summary,
+-         issue.description.as_deref(),
+-         status_str,
+-         priority_str,
+-         issue.assignee_id,
+-+        issue.reporter_id,
+-         issue.created_at,
+-+        issue.updated_at,
+-         issue.id,
+-     )
+-     .fetch_one(pool)
+-diff --git a/jira_core/src/issue.rs b/jira_core/src/issue.rs
+-index b261b12..0b2fa42 100644
+---- a/jira_core/src/issue.rs
+-+++ b/jira_core/src/issue.rs
+-@@ -7,12 +7,21 @@ pub struct Issue {
+-     pub id: i32,
+-     pub project_id: i32,
+-     pub issue_number: i32,
+-+
+-+    // Issue metadata
+-+    pub issue_type: IssueType,
+-     pub summary: String,
+-     pub description: Option<String>,
+-     pub status: IssueStatus,
+-     pub priority: IssuePriority,
+-+
+-+    // Users involved
+-     pub assignee_id: Option<i32>,
+-+    pub reporter_id: i32,
+-+
+-+    // Timestamps
+-     pub created_at: chrono::DateTime<chrono::Utc>,
+-+    pub updated_at: chrono::DateTime<chrono::Utc>,
+- }
+- 
+- #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+-@@ -42,7 +51,7 @@ impl FromStr for IssueStatus {
+-             "InProgress" => Ok(IssueStatus::InProgress),
+-             "Resolved" => Ok(IssueStatus::Resolved),
+-             "Closed" => Ok(IssueStatus::Closed),
+--            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
+-+            _ => Err(anyhow::anyhow!("Invalid issue status: {s}")),
+-         }
+-     }
+- }
+-@@ -75,7 +84,37 @@ impl FromStr for IssuePriority {
+-             "Medium" => Ok(IssuePriority::Medium),
+-             "High" => Ok(IssuePriority::High),
+-             "Urgent" => Ok(IssuePriority::Urgent),
+--            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
+-+            _ => Err(anyhow::anyhow!("Invalid issue priority: {s}")),
+-+        }
+-+    }
+-+}
+-+
+-+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+-+pub enum IssueType {
+-+    Bug,
+-+    Task,
+-+    Feature,
+-+}
+-+
+-+impl IssueType {
+-+    pub fn as_str(&self) -> &str {
+-+        match self {
+-+            IssueType::Bug => "Bug",
+-+            IssueType::Task => "Task",
+-+            IssueType::Feature => "Feature",
+-+        }
+-+    }
+-+}
+-+
+-+impl FromStr for IssueType {
+-+    type Err = anyhow::Error;
+-+
+-+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+-+        match s {
+-+            "Bug" => Ok(IssueType::Bug),
+-+            "Task" => Ok(IssueType::Task),
+-+            "Feature" => Ok(IssueType::Feature),
+-+            _ => Err(anyhow::anyhow!("Invalid issue type: {s}")),
+-         }
+-     }
+- }
+-diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
+-index 0b7cef6..40cdf11 100644
+---- a/jira_core/src/lib.rs
+-+++ b/jira_core/src/lib.rs
+-@@ -1,17 +1,2 @@
+--pub fn add(left: u64, right: u64) -> u64 {
+--    left + right
+--}
+--
+--#[cfg(test)]
+--mod tests {
+--    use super::*;
+--
+--    #[test]
+--    fn it_works() {
+--        let result = add(2, 2);
+--        assert_eq!(result, 4);
+--    }
+--}
+--
+- pub mod issue;
+- pub mod project;
+-diff --git a/jira_core/src/project.rs b/jira_core/src/project.rs
+-index d02fb64..ba7229d 100644
+---- a/jira_core/src/project.rs
+-+++ b/jira_core/src/project.rs
+-@@ -5,5 +5,6 @@ pub struct Project {
+-     pub id: i32,
+-     pub name: String,
+-     pub key: String,
+-+    pub owner_id: i32,
+-     pub created_at: chrono::DateTime<chrono::Utc>,
+- }
+-diff --git a/migrations/20260710115729_create_initial_schema.up.sql b/migrations/20260710115729_create_initial_schema.up.sql
+-index 07c4a1c..66e9407 100644
+---- a/migrations/20260710115729_create_initial_schema.up.sql
+-+++ b/migrations/20260710115729_create_initial_schema.up.sql
+-@@ -12,22 +12,35 @@ CREATE TABLE IF NOT EXISTS projects (
+-     id SERIAL PRIMARY KEY,
+-     key VARCHAR(50) UNIQUE NOT NULL,
+-     name VARCHAR(255) NOT NULL,
+--    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+-+    owner_id INTEGER NOT NULL, 
+-+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+-+
+-+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+- );
+- 
+- CREATE TABLE IF NOT EXISTS issues (
+-     id SERIAL PRIMARY KEY,
+-     project_id INTEGER NOT NULL,
+-     issue_number INTEGER NOT NULL,
+-+
+-+    -- Issue Metadata
+-+    issue_type VARCHAR(50) NOT NULL, -- e.g Bug, Task, etc.
+-     summary VARCHAR(255) NOT NULL,
+-     description TEXT,
+-     status VARCHAR(50) NOT NULL,
+-     priority VARCHAR(50) NOT NULL,
+--    assignee_id INTEGER,
+-+
+-+    -- User involved
+-+    assignee_id INTEGER, -- who is fixing the issue (can be null) 
+-+    reporter_id INTEGER NOT NULL, -- who created issue,
+-+    
+-+    -- Timestamps 
+-     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+-+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+- 
+-     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+-     FOREIGN KEY (assignee_id) REFERENCES users(id) ON DELETE SET NULL,
+-+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+- 
+-     -- This ensures each issue number is unique within a project
+-     UNIQUE(project_id, issue_number)
 diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
-index 0b7cef6..40cdf11 100644
+index 40cdf11..4ffbd53 100644
 --- a/jira_core/src/lib.rs
 +++ b/jira_core/src/lib.rs
-@@ -1,17 +1,2 @@
--pub fn add(left: u64, right: u64) -> u64 {
--    left + right
--}
--
--#[cfg(test)]
--mod tests {
--    use super::*;
--
--    #[test]
--    fn it_works() {
--        let result = add(2, 2);
--        assert_eq!(result, 4);
--    }
--}
--
+@@ -1,2 +1,3 @@
  pub mod issue;
  pub mod project;
-diff --git a/jira_core/src/project.rs b/jira_core/src/project.rs
-index d02fb64..ba7229d 100644
---- a/jira_core/src/project.rs
-+++ b/jira_core/src/project.rs
-@@ -5,5 +5,6 @@ pub struct Project {
-     pub id: i32,
-     pub name: String,
-     pub key: String,
-+    pub owner_id: i32,
-     pub created_at: chrono::DateTime<chrono::Utc>,
- }
-diff --git a/migrations/20260710115729_create_initial_schema.up.sql b/migrations/20260710115729_create_initial_schema.up.sql
-index 07c4a1c..66e9407 100644
---- a/migrations/20260710115729_create_initial_schema.up.sql
-+++ b/migrations/20260710115729_create_initial_schema.up.sql
-@@ -12,22 +12,35 @@ CREATE TABLE IF NOT EXISTS projects (
-     id SERIAL PRIMARY KEY,
-     key VARCHAR(50) UNIQUE NOT NULL,
-     name VARCHAR(255) NOT NULL,
--    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-+    owner_id INTEGER NOT NULL, 
-+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-+
-+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
- );
- 
- CREATE TABLE IF NOT EXISTS issues (
-     id SERIAL PRIMARY KEY,
-     project_id INTEGER NOT NULL,
-     issue_number INTEGER NOT NULL,
-+
-+    -- Issue Metadata
-+    issue_type VARCHAR(50) NOT NULL, -- e.g Bug, Task, etc.
-     summary VARCHAR(255) NOT NULL,
-     description TEXT,
-     status VARCHAR(50) NOT NULL,
-     priority VARCHAR(50) NOT NULL,
--    assignee_id INTEGER,
-+
-+    -- User involved
-+    assignee_id INTEGER, -- who is fixing the issue (can be null) 
-+    reporter_id INTEGER NOT NULL, -- who created issue,
-+    
-+    -- Timestamps 
-     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
- 
-     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
-     FOREIGN KEY (assignee_id) REFERENCES users(id) ON DELETE SET NULL,
-+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
- 
-     -- This ensures each issue number is unique within a project
-     UNIQUE(project_id, issue_number)
++pub mod user;

@@ -25,10 +25,10 @@
 
 ## Implement Database Access (Projects):
 - [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
-- [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
-- [ ] Write delete_project(pool, id) -> Result<(), DbError>
-- [ ] Write tests for Project CRUD.
-- [ ] Implement Database Access (Users):
+- [x] Write get_user_projects(pool, user_id) -> Result<Vec<Project>, DbError>
+- [x] Write delete_project(pool, id) -> Result<(), DbError>
+- [x] Write tests for Project CRUD.
+### Implement Database Access (Users):
 - [ ] Write create_user(...) and get_all_users(...).
 - [ ] Write tests for User CRUD.
 

@@ -1,5 +1,6 @@
 use crate::DbError;
 use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+use jira_core::project::Project;
 use sqlx::PgPool;
 use std::str::FromStr;
 
@@ -22,7 +23,67 @@ pub async fn create_project(
     Ok(new_project.id)
 }
 
-// pub async fn get_all_projects(pool: &PgPool)  {}
+// MAYBE I'll use it later
+//
+// pub async fn get_all_projects_by_owner(
+//     pool: &PgPool,
+//     user_id: i32,
+// ) -> Result<Vec<Project>, DbError> {
+//     let records = sqlx::query!("SELECT * FROM projects WHERE owner_id = $1", user_id)
+//         .fetch_all(pool)
+//         .await?;
+//
+//     let mut filtered_projects = Vec::new();
+//
+//     for record in records {
+//         filtered_projects.push(Project {
+//             id: record.id,
+//             name: record.name,
+//             key: record.key,
+//             owner_id: record.owner_id,
+//             created_at: record.created_at,
+//         });
+//     }
+//     Ok(filtered_projects)
+// }
+
+pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+    // We use DISTINCT in case user has multiple roles
+    let records = sqlx::query!(
+        r#"
+    SELECT DISTINCT p.id, p.name, p.key, p.owner_id, p.created_at 
+    FROM projects p
+    LEFT JOIN issues i ON p.id = i.project_id
+    WHERE p.owner_id = $1
+        OR i.assignee_id = $1
+        OR i.reporter_id = $1
+        "#,
+        user_id
+    )
+    .fetch_all(pool)
+    .await?;
+
+    let mut projects = Vec::new();
+    for record in records {
+        projects.push(Project {
+            id: record.id,
+            name: record.name,
+            key: record.key,
+            owner_id: record.owner_id,
+            created_at: record.created_at,
+        });
+    }
+
+    Ok(projects)
+}
+
+pub async fn delete_project(pool: &PgPool, project_id: i32) -> Result<(), DbError> {
+    sqlx::query!("DELETE FROM projects WHERE id = $1", project_id)
+        .execute(pool)
+        .await?;
+
+    Ok(())
+}
 
 pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)

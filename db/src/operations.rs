@@ -1,6 +1,7 @@
 use crate::DbError;
 use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
 use jira_core::project::Project;
+use jira_core::user::User;
 use sqlx::PgPool;
 use std::str::FromStr;
 
@@ -46,8 +47,38 @@ pub async fn create_project(
 //     }
 //     Ok(filtered_projects)
 // }
+pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, DbError> {
+    let new_user = sqlx::query!(
+        "INSERT INTO users (username, role, email, password_hash, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+        user.username,
+        user.role,
+        user.email,
+        user.password_hash,
+        user.created_at,
+    ).fetch_one(pool).await?;
 
-pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+    Ok(new_user.id)
+}
+
+pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
+    let records = sqlx::query!("SELECT * FROM users").fetch_all(pool).await?;
+
+    let mut users = Vec::new();
+    for user in records {
+        users.push(User {
+            // id: user.id,
+            username: user.username,
+            role: user.role,
+            email: user.email,
+            password_hash: user.password_hash,
+            created_at: user.created_at,
+        });
+    }
+
+    Ok(users)
+}
+
+pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
     // We use DISTINCT in case user has multiple roles
     let records = sqlx::query!(
         r#"

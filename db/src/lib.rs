@@ -2,7 +2,7 @@
 mod tests {
     use sqlx::PgPool;
 
-    use crate::operations::{create_project, get_user_projects};
+    use crate::operations::{create_project, read_user_projects};
 
     #[tokio::test]
     async fn test_fetch_issues() {
@@ -169,7 +169,7 @@ mod tests {
 
         assert!(project_id > 0, "Project id should be valid");
 
-        let user_project = get_user_projects(&pool, user_id)
+        let user_project = read_user_projects(&pool, user_id)
             .await
             .expect("Failed to fetch user projects");
 
@@ -177,6 +177,26 @@ mod tests {
             user_project.iter().any(|p| p.id == project_id),
             "Newly created project should be appear in user's project list"
         );
+    }
+
+    #[tokio::test]
+    async fn create_user_test() {
+        use crate::operations::create_user;
+        dotenvy::dotenv().ok();
+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+        let pool = PgPool::connect(&db_url).await.unwrap();
+
+        let new_user = jira_core::user::User {
+            username: "John Doe".to_string(),
+            role: "Admin".to_string(),
+            email: "johndoepool@gmail.com".to_string(),
+            password_hash: "29299ajajasdasdaaaaaaakakak".to_string(),
+            created_at: chrono::Utc::now(),
+        };
+
+        let result = create_user(&pool, &new_user).await.unwrap();
+        println!("Successfully created user with id {}", result);
+        assert!(result > 0);
     }
 }
 

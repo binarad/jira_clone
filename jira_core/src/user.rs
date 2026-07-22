@@ -1,8 +1,11 @@
+use serde::{Deserialize, Serialize};
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct User {
-    id: i32,
-    username: String,
-    role: String,          // Todo create UserRole struct
-    email: String,         // Todo email validation later?
-    password_hash: String, // ?
-    created_at: chrono::DateTime<chrono::Utc>,
+    // pub id: i32,
+    pub username: String,
+    pub role: String,          // Todo create UserRole struct
+    pub email: String,         // Todo email validation later?
+    pub password_hash: String, // ?
+    pub created_at: chrono::DateTime<chrono::Utc>,
 }

@@ -29,8 +29,8 @@
 - [x] Write delete_project(pool, id) -> Result<(), DbError>
 - [x] Write tests for Project CRUD.
 ### Implement Database Access (Users):
-- [ ] Write create_user(...) and get_all_users(...).
-- [ ] Write tests for User CRUD.
+- [x] Write create_user(...) and get_all_users(...).
+- [x] Write tests for User CRUD.
 
 ## Phase 2: Core State & Bootstrapping (The Engine)
 ### GUI Setup:

@@ -4,9 +4,10 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-jira_core = { path = "../jira_core" }
-db = { path = "../db" }
-iced = { workspace = true }
-tokio = { workspace = true }
 anyhow = { workspace = true }
+db = { path = "../db" }
 dotenvy = { workspace = true }
+iced = { workspace = true }
+jira_core = { path = "../jira_core" }
+sqlx.workspace = true
+tokio = { workspace = true }

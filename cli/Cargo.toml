@@ -1,0 +1,14 @@
+[package]
+name = "cli"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow.workspace = true
+clap.workspace = true
+comfy-table = "7.2.2"
+db = { path = "../db/" }
+dotenvy = { workspace = true }
+jira_core = { path = "../jira_core" }
+serde.workspace = true
+tokio.workspace = true

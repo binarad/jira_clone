@@ -35,9 +35,10 @@
 ## Phase 2: Core State & Bootstrapping (The Engine)
 ### GUI Setup:
 - [x] Add iced, tokio, and dotenvy to gui/Cargo.toml.
-- [ ] Write the main() function to load .env and initialize the PgPool.
-- [ ] Define the App State (gui/src/app.rs):
-- [ ] Create struct AppState containing the PgPool.
+- [x] Write the main() function to load .env and initialize the PgPool.
+- [x] Define the App State (gui/src/app.rs):
+- [x] Create struct AppState containing the PgPool.
+- [ ] Create login screen **CURRENT**
 - [ ] Add active_project_id: Option<i32> to state.
 - [ ] Create enum ViewState { Loading, ProjectList, Board, Error(String) } and add it to state.
 - [ ] Define the Messages (gui/src/message.rs):

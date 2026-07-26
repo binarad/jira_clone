@@ -218,3 +218,15 @@ pub enum DbError {
     #[error("Unexpected error: {0}")]
     Unexpected(#[from] anyhow::Error),
 }
+
+use anyhow::{Context, Result};
+use sqlx::PgPool;
+pub async fn connect_to_db() -> Result<PgPool> {
+    dotenvy::dotenv().ok();
+    let db_url = std::env::var("DATABASE_URL")
+        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
+    let pool = PgPool::connect(&db_url)
+        .await
+        .context("Failed to establish a connection to Postgres. Is docker running?")?;
+    Ok(pool)
+}

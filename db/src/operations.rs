@@ -72,11 +72,13 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
             email: user.email,
             password_hash: user.password_hash,
             created_at: user.created_at,
+            ..Default::default()
         });
     }
 
     Ok(users)
 }
+// impl Default
 
 pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
     // We use DISTINCT in case user has multiple roles

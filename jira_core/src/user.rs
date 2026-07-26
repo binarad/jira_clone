@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
 pub struct User {
-    // pub id: i32,
+    pub id: i32,
     pub username: String,
     pub role: String,          // Todo create UserRole struct
     pub email: String,         // Todo email validation later?

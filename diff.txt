@@ -1,1596 +1,1733 @@
 diff --git a/Cargo.lock b/Cargo.lock
-index e27045d..dded1bf 100644
+index dded1bf..3dca7af 100644
 --- a/Cargo.lock
 +++ b/Cargo.lock
-@@ -80,6 +80,56 @@ dependencies = [
-  "libc",
- ]
- 
-+[[package]]
-+name = "anstream"
-+version = "1.0.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "824a212faf96e9acacdbd09febd34438f8f711fb84e09a8916013cd7815ca28d"
-+dependencies = [
-+ "anstyle",
-+ "anstyle-parse",
-+ "anstyle-query",
-+ "anstyle-wincon",
-+ "colorchoice",
-+ "is_terminal_polyfill",
-+ "utf8parse",
-+]
-+
-+[[package]]
-+name = "anstyle"
-+version = "1.0.14"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000"
-+
-+[[package]]
-+name = "anstyle-parse"
-+version = "1.0.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "52ce7f38b242319f7cabaa6813055467063ecdc9d355bbb4ce0c68908cd8130e"
-+dependencies = [
-+ "utf8parse",
-+]
-+
-+[[package]]
-+name = "anstyle-query"
-+version = "1.1.5"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
-+dependencies = [
-+ "windows-sys 0.61.2",
-+]
-+
-+[[package]]
-+name = "anstyle-wincon"
-+version = "3.0.11"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
-+dependencies = [
-+ "anstyle",
-+ "once_cell_polyfill",
-+ "windows-sys 0.61.2",
-+]
-+
- [[package]]
- name = "anyhow"
- version = "1.0.103"
-@@ -206,7 +256,7 @@ checksum = "3b43422f69d8ff38f95f1b2bb76517c91589a924d1559a0e935d7c8ce0274c11"
+@@ -1959,6 +1959,7 @@ version = "0.1.0"
  dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -241,7 +291,7 @@ checksum = "9035ad2d096bed7955a320ee7e2230574d28fd3c3a0f186cbea1ff3c7eed5dbb"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -379,7 +429,7 @@ checksum = "f9abbd1bc6865053c427f7198e6af43bfdedc55ab791faed4fbd361d789575ff"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -494,6 +544,60 @@ dependencies = [
-  "windows-link",
- ]
- 
-+[[package]]
-+name = "clap"
-+version = "4.6.4"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "d91e0c145792ef73a6ad36d27c75ac09f1832222a3c209689d90f534685ee5b7"
-+dependencies = [
-+ "clap_builder",
-+ "clap_derive",
-+]
-+
-+[[package]]
-+name = "clap_builder"
-+version = "4.6.2"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "f09628afdcc538b57f3c6341e9c8e9970f18e4a481690a64974d7023bd33548b"
-+dependencies = [
-+ "anstream",
-+ "anstyle",
-+ "clap_lex",
-+ "strsim",
-+]
-+
-+[[package]]
-+name = "clap_derive"
-+version = "4.6.4"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "d012d2b9d65aca7f18f4d9878a045bc17899bba951561ba5ec3c2ba1eed9a061"
-+dependencies = [
-+ "heck",
-+ "proc-macro2",
-+ "quote",
-+ "syn 3.0.3",
-+]
-+
-+[[package]]
-+name = "clap_lex"
-+version = "1.1.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
-+
-+[[package]]
-+name = "cli"
-+version = "0.1.0"
-+dependencies = [
-+ "anyhow",
+  "anyhow",
+  "chrono",
 + "clap",
-+ "comfy-table",
-+ "db",
-+ "dotenvy",
-+ "jira_core",
-+ "serde",
-+ "tokio",
-+]
-+
- [[package]]
- name = "clipboard-win"
- version = "5.4.1"
-@@ -550,6 +654,12 @@ dependencies = [
-  "unicode-width",
- ]
- 
-+[[package]]
-+name = "colorchoice"
-+version = "1.0.5"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
-+
- [[package]]
- name = "combine"
- version = "4.6.7"
-@@ -560,6 +670,17 @@ dependencies = [
-  "memchr",
- ]
- 
-+[[package]]
-+name = "comfy-table"
-+version = "7.2.2"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "958c5d6ecf1f214b4c2bbbbf6ab9523a864bd136dcf71a7e8904799acfe1ad47"
-+dependencies = [
-+ "crossterm",
-+ "unicode-segmentation",
-+ "unicode-width",
-+]
-+
- [[package]]
- name = "concurrent-queue"
- version = "2.5.0"
-@@ -711,6 +832,29 @@ version = "0.8.22"
- source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
- 
-+[[package]]
-+name = "crossterm"
-+version = "0.29.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "d8b9f2e4c67f833b660cdb0a3523065869fb35570177239812ed4c905aeff87b"
-+dependencies = [
-+ "bitflags 2.13.0",
-+ "crossterm_winapi",
-+ "document-features",
-+ "parking_lot",
-+ "rustix 1.1.4",
-+ "winapi",
-+]
-+
-+[[package]]
-+name = "crossterm_winapi"
-+version = "0.9.1"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "acdd7c62a3665c7f6830a51635d9ac9b23ed385797f70a83bb8bafe9c572ab2b"
-+dependencies = [
-+ "winapi",
-+]
-+
- [[package]]
- name = "crunchy"
- version = "0.2.4"
-@@ -831,7 +975,7 @@ checksum = "1ac70aa55017e108007fbaf5aa0f54b021c98f92ff8af59d42eda9da96e3dd4f"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -909,7 +1053,7 @@ checksum = "67c78a4d8fdf9953a5c9d458f9efe940fd97a0cab0941c075a813ac594733827"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -1078,7 +1222,7 @@ checksum = "1a5c6c585bc94aaf2c7b51dd4c2ba22680844aba4c687be581871a6f518c5742"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -1176,7 +1320,7 @@ checksum = "e835b70203e41293343137df5c0664546da5745f82ec9b84d40be8336958447b"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -1487,7 +1631,7 @@ dependencies = [
-  "js-sys",
-  "log",
-  "wasm-bindgen",
-- "windows-core 0.58.0",
-+ "windows-core 0.62.2",
- ]
- 
- [[package]]
-@@ -1797,6 +1941,12 @@ dependencies = [
-  "hashbrown 0.17.1",
- ]
- 
-+[[package]]
-+name = "is_terminal_polyfill"
-+version = "1.70.2"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
-+
- [[package]]
- name = "itoa"
- version = "1.0.18"
-@@ -1840,7 +1990,7 @@ dependencies = [
-  "quote",
-  "rustc_version",
-  "simd_cesu8",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -1868,7 +2018,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "38c0b942f458fe50cdac086d2f946512305e5631e720728f2a61aabcd47a6264"
- dependencies = [
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -2202,7 +2352,7 @@ dependencies = [
-  "proc-macro-crate",
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -2570,6 +2720,12 @@ version = "1.21.4"
- source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
- 
-+[[package]]
-+name = "once_cell_polyfill"
-+version = "1.70.2"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
-+
- [[package]]
- name = "orbclient"
- version = "0.3.55"
-@@ -2666,7 +2822,7 @@ checksum = "c96395f0a926bc13b1c17622aaddda1ecb55d49c8f1bf9777e4d877800a43f8b"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3023,7 +3179,7 @@ checksum = "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3047,7 +3203,7 @@ checksum = "175ee3e80ae9982737ca543e96133087cbd9a485eecc3bc4de9c1a37b47ea59c"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3348,7 +3504,7 @@ dependencies = [
-  "quote",
-  "sqlx-core",
-  "sqlx-macros-core",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3371,7 +3527,7 @@ dependencies = [
-  "sqlx-mysql",
-  "sqlx-postgres",
-  "sqlx-sqlite",
-- "syn",
-+ "syn 2.0.118",
-  "thiserror 2.0.18",
-  "tokio",
-  "url",
-@@ -3494,6 +3650,12 @@ dependencies = [
-  "unicode-properties",
- ]
- 
-+[[package]]
-+name = "strsim"
-+version = "0.11.1"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
-+
- [[package]]
- name = "svg_fmt"
- version = "0.4.5"
-@@ -3522,6 +3684,17 @@ dependencies = [
-  "unicode-ident",
- ]
- 
-+[[package]]
-+name = "syn"
-+version = "3.0.3"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "53e9bae58849f64dfa4f5d5ae372c8341f7305f82a3868709269343628b659a3"
-+dependencies = [
-+ "proc-macro2",
-+ "quote",
-+ "unicode-ident",
-+]
-+
- [[package]]
- name = "synstructure"
- version = "0.13.2"
-@@ -3530,7 +3703,7 @@ checksum = "728a70f3dbaf5bab7f0c4b1ac8d7ae5ea60a4b5549c8a5914361c99147a709d2"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3590,7 +3763,7 @@ checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3601,7 +3774,7 @@ checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3692,7 +3865,7 @@ checksum = "385a6cb71ab9ab790c5fe8d67f1645e6c450a7ce006a33de03daa956cf70a496"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3756,7 +3929,7 @@ checksum = "7490cfa5ec963746568740651ac6781f701c9c5ea257c58e057f3ba8cf69e8da"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -3863,6 +4036,12 @@ version = "1.0.4"
- source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
- 
-+[[package]]
-+name = "utf8parse"
-+version = "0.2.2"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
-+
- [[package]]
- name = "uuid"
- version = "1.23.4"
-@@ -3953,7 +4132,7 @@ dependencies = [
-  "bumpalo",
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
-  "wasm-bindgen-shared",
- ]
- 
-@@ -4292,6 +4471,22 @@ version = "2.1.2"
- source = "registry+https://github.com/rust-lang/crates.io-index"
- checksum = "998767ef88740d1f5b0682a9c53c24431453923962269c2db68ee43788c5a40d"
- 
-+[[package]]
-+name = "winapi"
-+version = "0.3.9"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
-+dependencies = [
-+ "winapi-i686-pc-windows-gnu",
-+ "winapi-x86_64-pc-windows-gnu",
-+]
-+
-+[[package]]
-+name = "winapi-i686-pc-windows-gnu"
-+version = "0.4.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
-+
- [[package]]
- name = "winapi-util"
- version = "0.1.11"
-@@ -4301,6 +4496,12 @@ dependencies = [
-  "windows-sys 0.61.2",
- ]
- 
-+[[package]]
-+name = "winapi-x86_64-pc-windows-gnu"
-+version = "0.4.0"
-+source = "registry+https://github.com/rust-lang/crates.io-index"
-+checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
-+
- [[package]]
- name = "window_clipboard"
- version = "0.5.1"
-@@ -4391,7 +4592,7 @@ checksum = "2bbd5b46c938e506ecbce286b6628a02171d56153ba733b6c741fc627ec9579b"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4402,7 +4603,7 @@ checksum = "053e2e040ab57b9dc951b72c264860db7eb3b0200ba345b4e4c3b14f67855ddf"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4413,7 +4614,7 @@ checksum = "053c4c462dc91d3b1504c6fe5a726dd15e216ba718e84a0e46a88fbe5ded3515"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4424,7 +4625,7 @@ checksum = "3f316c4a2570ba26bbec722032c4099d8c8bc095efccdc15688708623367e358"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4741,7 +4942,7 @@ checksum = "de844c262c8848816172cef550288e7dc6c7b7814b4ee56b3e1553f275f1858e"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
-  "synstructure",
- ]
- 
-@@ -4789,7 +4990,7 @@ dependencies = [
-  "proc-macro-crate",
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
-  "zbus_names",
-  "zvariant",
-  "zvariant_utils",
-@@ -4829,7 +5030,7 @@ checksum = "e2e817b7b52d0c7358d3246da9d69935ebb18116b2b102b4230dac079b4862f5"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4849,7 +5050,7 @@ checksum = "11532158c46691caf0f2593ea8358fed6bbf68a0315e80aae9bd41fbade684a1"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
-  "synstructure",
- ]
- 
-@@ -4883,7 +5084,7 @@ checksum = "625dc425cab0dca6dc3c3319506e6593dcb08a9f387ea3b284dbd52a92c40555"
- dependencies = [
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
- ]
- 
- [[package]]
-@@ -4915,7 +5116,7 @@ dependencies = [
-  "proc-macro-crate",
-  "proc-macro2",
-  "quote",
-- "syn",
-+ "syn 2.0.118",
-  "zvariant_utils",
- ]
- 
-@@ -4928,6 +5129,6 @@ dependencies = [
-  "proc-macro2",
-  "quote",
   "serde",
-- "syn",
-+ "syn 2.0.118",
-  "winnow",
+  "thiserror 2.0.18",
  ]
-diff --git a/Cargo.toml b/Cargo.toml
-index 53aa835..0ed8440 100644
---- a/Cargo.toml
-+++ b/Cargo.toml
-@@ -5,7 +5,7 @@
+diff --git a/cli/src/main.rs b/cli/src/main.rs
+index feabd00..360486c 100644
+--- a/cli/src/main.rs
++++ b/cli/src/main.rs
+@@ -1,15 +1,22 @@
+-use clap::{Parser};
++use clap::Parser;
+ use comfy_table::{Table, modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL};
+ use db::{
+     connect_to_db,
+-    operations::{get_all_users, read_user_projects},
++    operations::{create_user, get_all_users, read_user_projects},
+ };
++use jira_core::user::User;
  
- [workspace]
- resolver = "3"
--members = ["db", "gui", "jira_core"]
-+members = ["cli", "db", "gui", "jira_core"]
- default-members = ["gui"]
+ #[derive(Parser, Debug)]
+ enum Operation {
+     /// Prints list of all users
+     Users,
  
- [workspace.dependencies]
-@@ -20,5 +20,8 @@ dotenvy = "0.15.7"
- # Database
- sqlx = { version = "0.9.0", features = ["chrono", "postgres", "runtime-tokio"] }
- 
-+# CLI
-+clap = { version = "4.6.4", features = ["derive"] }
++    /// Create User
++    CreateUser {
++        #[command(flatten)]
++        user: User,
++    },
 +
- # GUI
- iced = { version = "0.14.0", features = ["tokio"] }
-diff --git a/Todo.md b/Todo.md
-index acf8a3a..7b672eb 100644
---- a/Todo.md
-+++ b/Todo.md
-@@ -35,9 +35,10 @@
- ## Phase 2: Core State & Bootstrapping (The Engine)
- ### GUI Setup:
- - [x] Add iced, tokio, and dotenvy to gui/Cargo.toml.
--- [ ] Write the main() function to load .env and initialize the PgPool.
--- [ ] Define the App State (gui/src/app.rs):
--- [ ] Create struct AppState containing the PgPool.
-+- [x] Write the main() function to load .env and initialize the PgPool.
-+- [x] Define the App State (gui/src/app.rs):
-+- [x] Create struct AppState containing the PgPool.
-+- [ ] Create login screen **CURRENT**
- - [ ] Add active_project_id: Option<i32> to state.
- - [ ] Create enum ViewState { Loading, ProjectList, Board, Error(String) } and add it to state.
- - [ ] Define the Messages (gui/src/message.rs):
-diff --git a/db/Cargo.toml b/db/Cargo.toml
-index 8938b89..6b1dfe4 100644
---- a/db/Cargo.toml
-+++ b/db/Cargo.toml
-@@ -6,10 +6,10 @@ edition = "2024"
- [dependencies]
- anyhow = { workspace = true }
- chrono = { workspace = true }
-+dotenvy.workspace = true
- jira_core = { path = "../jira_core" }
- sqlx = { workspace = true }
- thiserror = { workspace = true }
+     /// Prints user related projects
+     UserProject { user_id: i32 },
+ }
+@@ -27,6 +34,7 @@ async fn main() {
+     match args.operation {
+         Operation::Users => show_all_users().await,
+         Operation::UserProject { user_id } => show_user_projects(user_id).await,
++        Operation::CreateUser { user } => show_created_user(user).await,
+     };
+ }
  
- [dev-dependencies]
--dotenvy = { workspace = true }
- tokio = { workspace = true }
-diff --git a/db/src/lib.rs b/db/src/lib.rs
-index f341194..8b7065e 100644
---- a/db/src/lib.rs
-+++ b/db/src/lib.rs
-@@ -218,3 +218,15 @@ pub enum DbError {
-     #[error("Unexpected error: {0}")]
-     Unexpected(#[from] anyhow::Error),
+@@ -46,7 +54,7 @@ async fn show_all_users() {
+     ]);
+     for user in users {
+         table.add_row(vec![
+-            user.id.to_string(),
++            user.id.map_or("N/A".to_string(), |id| id.to_string()),
+             user.username,
+             user.role,
+             user.email,
+@@ -78,3 +86,16 @@ async fn show_user_projects(user_id: i32) {
+ 
+     println!("{table}")
  }
 +
-+use anyhow::{Context, Result};
-+use sqlx::PgPool;
-+pub async fn connect_to_db() -> Result<PgPool> {
-+    dotenvy::dotenv().ok();
-+    let db_url = std::env::var("DATABASE_URL")
-+        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
-+    let pool = PgPool::connect(&db_url)
-+        .await
-+        .context("Failed to establish a connection to Postgres. Is docker running?")?;
-+    Ok(pool)
++async fn show_created_user(user: User) {
++    let pool = connect_to_db().await.unwrap();
++    let new_user = match create_user(&pool, &user).await {
++        Ok(new_user_id) => new_user_id,
++        Err(e) => {
++            println!("An Error Occured: {}", e);
++            return;
++        }
++    };
++
++    println!("User successfully created with ID: {}", new_user);
 +}
 diff --git a/db/src/operations.rs b/db/src/operations.rs
-index beff4f3..7e64fd8 100644
+index 7e64fd8..909f5d1 100644
 --- a/db/src/operations.rs
 +++ b/db/src/operations.rs
-@@ -72,11 +72,13 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
+@@ -66,7 +66,7 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
+     let mut users = Vec::new();
+     for user in records {
+         users.push(User {
+-            // id: user.id,
++            id: Some(user.id),
+             username: user.username,
+             role: user.role,
              email: user.email,
-             password_hash: user.password_hash,
-             created_at: user.created_at,
-+            ..Default::default()
-         });
-     }
- 
-     Ok(users)
- }
-+// impl Default
- 
- pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
-     // We use DISTINCT in case user has multiple roles
 diff --git a/diff.txt b/diff.txt
-index 46b7707..e28d2e7 100644
+index bd7d4e0..e69de29 100644
 --- a/diff.txt
 +++ b/diff.txt
-@@ -1,797 +0,0 @@
+@@ -1,1596 +0,0 @@
 -diff --git a/Cargo.lock b/Cargo.lock
--index 4ee7512..e27045d 100644
+-index e27045d..dded1bf 100644
 ---- a/Cargo.lock
 -+++ b/Cargo.lock
--@@ -1350,6 +1350,7 @@ dependencies = [
--  "dotenvy",
--  "iced",
--  "jira_core",
--+ "sqlx",
--  "tokio",
+-@@ -80,6 +80,56 @@ dependencies = [
+-  "libc",
 - ]
 - 
--@@ -1802,10 +1803,6 @@ version = "1.0.18"
-- source = "registry+https://github.com/rust-lang/crates.io-index"
-- checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
-- 
---[[package]]
---name = "jira_clone"
---version = "0.1.0"
---
+-+[[package]]
+-+name = "anstream"
+-+version = "1.0.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "824a212faf96e9acacdbd09febd34438f8f711fb84e09a8916013cd7815ca28d"
+-+dependencies = [
+-+ "anstyle",
+-+ "anstyle-parse",
+-+ "anstyle-query",
+-+ "anstyle-wincon",
+-+ "colorchoice",
+-+ "is_terminal_polyfill",
+-+ "utf8parse",
+-+]
+-+
+-+[[package]]
+-+name = "anstyle"
+-+version = "1.0.14"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "940b3a0ca603d1eade50a4846a2afffd5ef57a9feac2c0e2ec2e14f9ead76000"
+-+
+-+[[package]]
+-+name = "anstyle-parse"
+-+version = "1.0.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "52ce7f38b242319f7cabaa6813055467063ecdc9d355bbb4ce0c68908cd8130e"
+-+dependencies = [
+-+ "utf8parse",
+-+]
+-+
+-+[[package]]
+-+name = "anstyle-query"
+-+version = "1.1.5"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
+-+dependencies = [
+-+ "windows-sys 0.61.2",
+-+]
+-+
+-+[[package]]
+-+name = "anstyle-wincon"
+-+version = "3.0.11"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
+-+dependencies = [
+-+ "anstyle",
+-+ "once_cell_polyfill",
+-+ "windows-sys 0.61.2",
+-+]
+-+
 - [[package]]
-- name = "jira_core"
-- version = "0.1.0"
+- name = "anyhow"
+- version = "1.0.103"
+-@@ -206,7 +256,7 @@ checksum = "3b43422f69d8ff38f95f1b2bb76517c91589a924d1559a0e935d7c8ce0274c11"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -241,7 +291,7 @@ checksum = "9035ad2d096bed7955a320ee7e2230574d28fd3c3a0f186cbea1ff3c7eed5dbb"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -379,7 +429,7 @@ checksum = "f9abbd1bc6865053c427f7198e6af43bfdedc55ab791faed4fbd361d789575ff"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -494,6 +544,60 @@ dependencies = [
+-  "windows-link",
+- ]
+- 
+-+[[package]]
+-+name = "clap"
+-+version = "4.6.4"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "d91e0c145792ef73a6ad36d27c75ac09f1832222a3c209689d90f534685ee5b7"
+-+dependencies = [
+-+ "clap_builder",
+-+ "clap_derive",
+-+]
+-+
+-+[[package]]
+-+name = "clap_builder"
+-+version = "4.6.2"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "f09628afdcc538b57f3c6341e9c8e9970f18e4a481690a64974d7023bd33548b"
+-+dependencies = [
+-+ "anstream",
+-+ "anstyle",
+-+ "clap_lex",
+-+ "strsim",
+-+]
+-+
+-+[[package]]
+-+name = "clap_derive"
+-+version = "4.6.4"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "d012d2b9d65aca7f18f4d9878a045bc17899bba951561ba5ec3c2ba1eed9a061"
+-+dependencies = [
+-+ "heck",
+-+ "proc-macro2",
+-+ "quote",
+-+ "syn 3.0.3",
+-+]
+-+
+-+[[package]]
+-+name = "clap_lex"
+-+version = "1.1.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
+-+
+-+[[package]]
+-+name = "cli"
+-+version = "0.1.0"
+-+dependencies = [
+-+ "anyhow",
+-+ "clap",
+-+ "comfy-table",
+-+ "db",
+-+ "dotenvy",
+-+ "jira_core",
+-+ "serde",
+-+ "tokio",
+-+]
+-+
+- [[package]]
+- name = "clipboard-win"
+- version = "5.4.1"
+-@@ -550,6 +654,12 @@ dependencies = [
+-  "unicode-width",
+- ]
+- 
+-+[[package]]
+-+name = "colorchoice"
+-+version = "1.0.5"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
+-+
+- [[package]]
+- name = "combine"
+- version = "4.6.7"
+-@@ -560,6 +670,17 @@ dependencies = [
+-  "memchr",
+- ]
+- 
+-+[[package]]
+-+name = "comfy-table"
+-+version = "7.2.2"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "958c5d6ecf1f214b4c2bbbbf6ab9523a864bd136dcf71a7e8904799acfe1ad47"
+-+dependencies = [
+-+ "crossterm",
+-+ "unicode-segmentation",
+-+ "unicode-width",
+-+]
+-+
+- [[package]]
+- name = "concurrent-queue"
+- version = "2.5.0"
+-@@ -711,6 +832,29 @@ version = "0.8.22"
+- source = "registry+https://github.com/rust-lang/crates.io-index"
+- checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
+- 
+-+[[package]]
+-+name = "crossterm"
+-+version = "0.29.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "d8b9f2e4c67f833b660cdb0a3523065869fb35570177239812ed4c905aeff87b"
+-+dependencies = [
+-+ "bitflags 2.13.0",
+-+ "crossterm_winapi",
+-+ "document-features",
+-+ "parking_lot",
+-+ "rustix 1.1.4",
+-+ "winapi",
+-+]
+-+
+-+[[package]]
+-+name = "crossterm_winapi"
+-+version = "0.9.1"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "acdd7c62a3665c7f6830a51635d9ac9b23ed385797f70a83bb8bafe9c572ab2b"
+-+dependencies = [
+-+ "winapi",
+-+]
+-+
+- [[package]]
+- name = "crunchy"
+- version = "0.2.4"
+-@@ -831,7 +975,7 @@ checksum = "1ac70aa55017e108007fbaf5aa0f54b021c98f92ff8af59d42eda9da96e3dd4f"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -909,7 +1053,7 @@ checksum = "67c78a4d8fdf9953a5c9d458f9efe940fd97a0cab0941c075a813ac594733827"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -1078,7 +1222,7 @@ checksum = "1a5c6c585bc94aaf2c7b51dd4c2ba22680844aba4c687be581871a6f518c5742"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -1176,7 +1320,7 @@ checksum = "e835b70203e41293343137df5c0664546da5745f82ec9b84d40be8336958447b"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -1487,7 +1631,7 @@ dependencies = [
+-  "js-sys",
+-  "log",
+-  "wasm-bindgen",
+-- "windows-core 0.58.0",
+-+ "windows-core 0.62.2",
+- ]
+- 
+- [[package]]
+-@@ -1797,6 +1941,12 @@ dependencies = [
+-  "hashbrown 0.17.1",
+- ]
+- 
+-+[[package]]
+-+name = "is_terminal_polyfill"
+-+version = "1.70.2"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
+-+
+- [[package]]
+- name = "itoa"
+- version = "1.0.18"
+-@@ -1840,7 +1990,7 @@ dependencies = [
+-  "quote",
+-  "rustc_version",
+-  "simd_cesu8",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -1868,7 +2018,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
+- checksum = "38c0b942f458fe50cdac086d2f946512305e5631e720728f2a61aabcd47a6264"
+- dependencies = [
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -2202,7 +2352,7 @@ dependencies = [
+-  "proc-macro-crate",
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -2570,6 +2720,12 @@ version = "1.21.4"
+- source = "registry+https://github.com/rust-lang/crates.io-index"
+- checksum = "9f7c3e4beb33f85d45ae3e3a1792185706c8e16d043238c593331cc7cd313b50"
+- 
+-+[[package]]
+-+name = "once_cell_polyfill"
+-+version = "1.70.2"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "384b8ab6d37215f3c5301a95a4accb5d64aa607f1fcb26a11b5303878451b4fe"
+-+
+- [[package]]
+- name = "orbclient"
+- version = "0.3.55"
+-@@ -2666,7 +2822,7 @@ checksum = "c96395f0a926bc13b1c17622aaddda1ecb55d49c8f1bf9777e4d877800a43f8b"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3023,7 +3179,7 @@ checksum = "d540f220d3187173da220f885ab66608367b6574e925011a9353e4badda91d79"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3047,7 +3203,7 @@ checksum = "175ee3e80ae9982737ca543e96133087cbd9a485eecc3bc4de9c1a37b47ea59c"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3348,7 +3504,7 @@ dependencies = [
+-  "quote",
+-  "sqlx-core",
+-  "sqlx-macros-core",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3371,7 +3527,7 @@ dependencies = [
+-  "sqlx-mysql",
+-  "sqlx-postgres",
+-  "sqlx-sqlite",
+-- "syn",
+-+ "syn 2.0.118",
+-  "thiserror 2.0.18",
+-  "tokio",
+-  "url",
+-@@ -3494,6 +3650,12 @@ dependencies = [
+-  "unicode-properties",
+- ]
+- 
+-+[[package]]
+-+name = "strsim"
+-+version = "0.11.1"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "7da8b5736845d9f2fcb837ea5d9e2628564b3b043a70948a3f0b778838c5fb4f"
+-+
+- [[package]]
+- name = "svg_fmt"
+- version = "0.4.5"
+-@@ -3522,6 +3684,17 @@ dependencies = [
+-  "unicode-ident",
+- ]
+- 
+-+[[package]]
+-+name = "syn"
+-+version = "3.0.3"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "53e9bae58849f64dfa4f5d5ae372c8341f7305f82a3868709269343628b659a3"
+-+dependencies = [
+-+ "proc-macro2",
+-+ "quote",
+-+ "unicode-ident",
+-+]
+-+
+- [[package]]
+- name = "synstructure"
+- version = "0.13.2"
+-@@ -3530,7 +3703,7 @@ checksum = "728a70f3dbaf5bab7f0c4b1ac8d7ae5ea60a4b5549c8a5914361c99147a709d2"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3590,7 +3763,7 @@ checksum = "4fee6c4efc90059e10f81e6d42c60a18f76588c3d74cb83a0b242a2b6c7504c1"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3601,7 +3774,7 @@ checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3692,7 +3865,7 @@ checksum = "385a6cb71ab9ab790c5fe8d67f1645e6c450a7ce006a33de03daa956cf70a496"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3756,7 +3929,7 @@ checksum = "7490cfa5ec963746568740651ac6781f701c9c5ea257c58e057f3ba8cf69e8da"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -3863,6 +4036,12 @@ version = "1.0.4"
+- source = "registry+https://github.com/rust-lang/crates.io-index"
+- checksum = "b6c140620e7ffbb22c2dee59cafe6084a59b5ffc27a8859a5f0d494b5d52b6be"
+- 
+-+[[package]]
+-+name = "utf8parse"
+-+version = "0.2.2"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "06abde3611657adf66d383f00b093d7faecc7fa57071cce2578660c9f1010821"
+-+
+- [[package]]
+- name = "uuid"
+- version = "1.23.4"
+-@@ -3953,7 +4132,7 @@ dependencies = [
+-  "bumpalo",
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+-  "wasm-bindgen-shared",
+- ]
+- 
+-@@ -4292,6 +4471,22 @@ version = "2.1.2"
+- source = "registry+https://github.com/rust-lang/crates.io-index"
+- checksum = "998767ef88740d1f5b0682a9c53c24431453923962269c2db68ee43788c5a40d"
+- 
+-+[[package]]
+-+name = "winapi"
+-+version = "0.3.9"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "5c839a674fcd7a98952e593242ea400abe93992746761e38641405d28b00f419"
+-+dependencies = [
+-+ "winapi-i686-pc-windows-gnu",
+-+ "winapi-x86_64-pc-windows-gnu",
+-+]
+-+
+-+[[package]]
+-+name = "winapi-i686-pc-windows-gnu"
+-+version = "0.4.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "ac3b87c63620426dd9b991e5ce0329eff545bccbbb34f3be09ff6fb6ab51b7b6"
+-+
+- [[package]]
+- name = "winapi-util"
+- version = "0.1.11"
+-@@ -4301,6 +4496,12 @@ dependencies = [
+-  "windows-sys 0.61.2",
+- ]
+- 
+-+[[package]]
+-+name = "winapi-x86_64-pc-windows-gnu"
+-+version = "0.4.0"
+-+source = "registry+https://github.com/rust-lang/crates.io-index"
+-+checksum = "712e227841d057c1ee1cd2fb22fa7e5a5461ae8e48fa2ca79ec42cfc1931183f"
+-+
+- [[package]]
+- name = "window_clipboard"
+- version = "0.5.1"
+-@@ -4391,7 +4592,7 @@ checksum = "2bbd5b46c938e506ecbce286b6628a02171d56153ba733b6c741fc627ec9579b"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4402,7 +4603,7 @@ checksum = "053e2e040ab57b9dc951b72c264860db7eb3b0200ba345b4e4c3b14f67855ddf"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4413,7 +4614,7 @@ checksum = "053c4c462dc91d3b1504c6fe5a726dd15e216ba718e84a0e46a88fbe5ded3515"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4424,7 +4625,7 @@ checksum = "3f316c4a2570ba26bbec722032c4099d8c8bc095efccdc15688708623367e358"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4741,7 +4942,7 @@ checksum = "de844c262c8848816172cef550288e7dc6c7b7814b4ee56b3e1553f275f1858e"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+-  "synstructure",
+- ]
+- 
+-@@ -4789,7 +4990,7 @@ dependencies = [
+-  "proc-macro-crate",
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+-  "zbus_names",
+-  "zvariant",
+-  "zvariant_utils",
+-@@ -4829,7 +5030,7 @@ checksum = "e2e817b7b52d0c7358d3246da9d69935ebb18116b2b102b4230dac079b4862f5"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4849,7 +5050,7 @@ checksum = "11532158c46691caf0f2593ea8358fed6bbf68a0315e80aae9bd41fbade684a1"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+-  "synstructure",
+- ]
+- 
+-@@ -4883,7 +5084,7 @@ checksum = "625dc425cab0dca6dc3c3319506e6593dcb08a9f387ea3b284dbd52a92c40555"
+- dependencies = [
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+- ]
+- 
+- [[package]]
+-@@ -4915,7 +5116,7 @@ dependencies = [
+-  "proc-macro-crate",
+-  "proc-macro2",
+-  "quote",
+-- "syn",
+-+ "syn 2.0.118",
+-  "zvariant_utils",
+- ]
+- 
+-@@ -4928,6 +5129,6 @@ dependencies = [
+-  "proc-macro2",
+-  "quote",
+-  "serde",
+-- "syn",
+-+ "syn 2.0.118",
+-  "winnow",
+- ]
 -diff --git a/Cargo.toml b/Cargo.toml
--index cac8b31..53aa835 100644
+-index 53aa835..0ed8440 100644
 ---- a/Cargo.toml
 -+++ b/Cargo.toml
--@@ -1,7 +1,7 @@
---[package]
---name = "jira_clone"
---version = "0.1.0"
---edition = "2024"
--+# [package]
--+# name = "jira_clone"
--+# version = "0.1.0"
--+# edition = "2024"
+-@@ -5,7 +5,7 @@
 - 
 - [workspace]
 - resolver = "3"
+--members = ["db", "gui", "jira_core"]
+-+members = ["cli", "db", "gui", "jira_core"]
+- default-members = ["gui"]
+- 
+- [workspace.dependencies]
+-@@ -20,5 +20,8 @@ dotenvy = "0.15.7"
+- # Database
+- sqlx = { version = "0.9.0", features = ["chrono", "postgres", "runtime-tokio"] }
+- 
+-+# CLI
+-+clap = { version = "4.6.4", features = ["derive"] }
+-+
+- # GUI
+- iced = { version = "0.14.0", features = ["tokio"] }
 -diff --git a/Todo.md b/Todo.md
--index 1f339bb..acf8a3a 100644
+-index acf8a3a..7b672eb 100644
 ---- a/Todo.md
 -+++ b/Todo.md
--@@ -34,7 +34,7 @@
-- 
+-@@ -35,9 +35,10 @@
 - ## Phase 2: Core State & Bootstrapping (The Engine)
 - ### GUI Setup:
---- [ ] Add iced, tokio, and dotenvy to gui/Cargo.toml.
--+- [x] Add iced, tokio, and dotenvy to gui/Cargo.toml.
-- - [ ] Write the main() function to load .env and initialize the PgPool.
-- - [ ] Define the App State (gui/src/app.rs):
-- - [ ] Create struct AppState containing the PgPool.
--diff --git a/diff.txt b/diff.txt
--index 9b4a020..e69de29 100644
----- a/diff.txt
--+++ b/diff.txt
--@@ -1,618 +0,0 @@
---diff --git a/Todo.md b/Todo.md
---index 93d7097..1f339bb 100644
------ a/Todo.md
---+++ b/Todo.md
---@@ -29,8 +29,8 @@
--- - [x] Write delete_project(pool, id) -> Result<(), DbError>
--- - [x] Write tests for Project CRUD.
--- ### Implement Database Access (Users):
----- [ ] Write create_user(...) and get_all_users(...).
----- [ ] Write tests for User CRUD.
---+- [x] Write create_user(...) and get_all_users(...).
---+- [x] Write tests for User CRUD.
--- 
--- ## Phase 2: Core State & Bootstrapping (The Engine)
--- ### GUI Setup:
---diff --git a/db/src/lib.rs b/db/src/lib.rs
---index e081de1..f341194 100644
------ a/db/src/lib.rs
---+++ b/db/src/lib.rs
---@@ -2,7 +2,7 @@
--- mod tests {
---     use sqlx::PgPool;
--- 
----    use crate::operations::{create_project, get_user_projects};
---+    use crate::operations::{create_project, read_user_projects};
--- 
---     #[tokio::test]
---     async fn test_fetch_issues() {
---@@ -169,7 +169,7 @@ mod tests {
--- 
---         assert!(project_id > 0, "Project id should be valid");
--- 
----        let user_project = get_user_projects(&pool, user_id)
---+        let user_project = read_user_projects(&pool, user_id)
---             .await
---             .expect("Failed to fetch user projects");
--- 
---@@ -178,6 +178,26 @@ mod tests {
---             "Newly created project should be appear in user's project list"
---         );
---     }
---+
---+    #[tokio::test]
---+    async fn create_user_test() {
---+        use crate::operations::create_user;
---+        dotenvy::dotenv().ok();
---+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
---+        let pool = PgPool::connect(&db_url).await.unwrap();
---+
---+        let new_user = jira_core::user::User {
---+            username: "John Doe".to_string(),
---+            role: "Admin".to_string(),
---+            email: "johndoepool@gmail.com".to_string(),
---+            password_hash: "29299ajajasdasdaaaaaaakakak".to_string(),
---+            created_at: chrono::Utc::now(),
---+        };
---+
---+        let result = create_user(&pool, &new_user).await.unwrap();
---+        println!("Successfully created user with id {}", result);
---+        assert!(result > 0);
---+    }
--- }
--- 
--- pub mod operations;
---diff --git a/db/src/operations.rs b/db/src/operations.rs
---index 513032a..beff4f3 100644
------ a/db/src/operations.rs
---+++ b/db/src/operations.rs
---@@ -1,6 +1,7 @@
--- use crate::DbError;
--- use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
--- use jira_core::project::Project;
---+use jira_core::user::User;
--- use sqlx::PgPool;
--- use std::str::FromStr;
--- 
---@@ -46,8 +47,38 @@ pub async fn create_project(
--- //     }
--- //     Ok(filtered_projects)
--- // }
---+pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, DbError> {
---+    let new_user = sqlx::query!(
---+        "INSERT INTO users (username, role, email, password_hash, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
---+        user.username,
---+        user.role,
---+        user.email,
---+        user.password_hash,
---+        user.created_at,
---+    ).fetch_one(pool).await?;
--- 
----pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
---+    Ok(new_user.id)
---+}
---+
---+pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
---+    let records = sqlx::query!("SELECT * FROM users").fetch_all(pool).await?;
---+
---+    let mut users = Vec::new();
---+    for user in records {
---+        users.push(User {
---+            // id: user.id,
---+            username: user.username,
---+            role: user.role,
---+            email: user.email,
---+            password_hash: user.password_hash,
---+            created_at: user.created_at,
---+        });
---+    }
---+
---+    Ok(users)
---+}
---+
---+pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
---     // We use DISTINCT in case user has multiple roles
---     let records = sqlx::query!(
---         r#"
---diff --git a/diff.txt b/diff.txt
---index bb772e3..e69de29 100644
------ a/diff.txt
---+++ b/diff.txt
---@@ -1,475 +0,0 @@
----diff --git a/.gitignore b/.gitignore
----index 3582f2c..dd8b5a7 100644
------- a/.gitignore
----+++ b/.gitignore
----@@ -1,2 +1,3 @@
---- /target
---- ./Cargo.lock
----+./diff.txt
----diff --git a/Todo.md b/Todo.md
----index 580eb35..93d7097 100644
------- a/Todo.md
----+++ b/Todo.md
----@@ -25,10 +25,10 @@
---- 
---- ## Implement Database Access (Projects):
---- - [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
------ [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
------ [ ] Write delete_project(pool, id) -> Result<(), DbError>
------ [ ] Write tests for Project CRUD.
------ [ ] Implement Database Access (Users):
----+- [x] Write get_user_projects(pool, user_id) -> Result<Vec<Project>, DbError>
----+- [x] Write delete_project(pool, id) -> Result<(), DbError>
----+- [x] Write tests for Project CRUD.
----+### Implement Database Access (Users):
---- - [ ] Write create_user(...) and get_all_users(...).
---- - [ ] Write tests for User CRUD.
---- 
----diff --git a/db/src/lib.rs b/db/src/lib.rs
----index d77c143..e081de1 100644
------- a/db/src/lib.rs
----+++ b/db/src/lib.rs
----@@ -2,6 +2,8 @@
---- mod tests {
----     use sqlx::PgPool;
---- 
----+    use crate::operations::{create_project, get_user_projects};
----+
----     #[tokio::test]
----     async fn test_fetch_issues() {
----         dotenvy::dotenv().ok();
----@@ -131,6 +133,51 @@ mod tests {
----     //     );
----     //     assert!(result > 0);
----     // }
----+
----+    #[tokio::test]
----+    async fn test_project_crud_workflow() {
----+        dotenvy::dotenv().ok();
----+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
----+        let pool = PgPool::connect(&db_url).await.unwrap();
----+
----+        let user_record = sqlx::query!(
----+            "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING id",
----+            "project_tester",
----+            "admin",
----+            "tester@test.com",
----+            "hash"
----+        ).fetch_optional(&pool).await.unwrap();
----+
----+        let user_id = match user_record {
----+            Some(record) => record.id,
----+            None => {
----+                sqlx::query!("SELECT id FROM users WHERE username = 'project_tester'")
----+                    .fetch_one(&pool)
----+                    .await
----+                    .unwrap()
----+                    .id
----+            }
----+        };
----+
----+        let timestamp = chrono::Utc::now().timestamp_subsec_nanos();
----+        let project_key = format!("T{timestamp}", timestamp = timestamp % 100000);
----+        let project_name = format!("Test Project {}", timestamp);
----+
----+        let project_id = create_project(&pool, &project_name, &project_key, user_id)
----+            .await
----+            .expect("Failed to create project");
----+
----+        assert!(project_id > 0, "Project id should be valid");
----+
----+        let user_project = get_user_projects(&pool, user_id)
----+            .await
----+            .expect("Failed to fetch user projects");
----+
----+        assert!(
----+            user_project.iter().any(|p| p.id == project_id),
----+            "Newly created project should be appear in user's project list"
----+        );
----+    }
---- }
---- 
---- pub mod operations;
----diff --git a/db/src/operations.rs b/db/src/operations.rs
----index b6bcdca..513032a 100644
------- a/db/src/operations.rs
----+++ b/db/src/operations.rs
----@@ -1,5 +1,6 @@
---- use crate::DbError;
---- use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
----+use jira_core::project::Project;
---- use sqlx::PgPool;
---- use std::str::FromStr;
---- 
----@@ -22,7 +23,67 @@ pub async fn create_project(
----     Ok(new_project.id)
---- }
---- 
-----// pub async fn get_all_projects(pool: &PgPool)  {}
----+// MAYBE I'll use it later
----+//
----+// pub async fn get_all_projects_by_owner(
----+//     pool: &PgPool,
----+//     user_id: i32,
----+// ) -> Result<Vec<Project>, DbError> {
----+//     let records = sqlx::query!("SELECT * FROM projects WHERE owner_id = $1", user_id)
----+//         .fetch_all(pool)
----+//         .await?;
----+//
----+//     let mut filtered_projects = Vec::new();
----+//
----+//     for record in records {
----+//         filtered_projects.push(Project {
----+//             id: record.id,
----+//             name: record.name,
----+//             key: record.key,
----+//             owner_id: record.owner_id,
----+//             created_at: record.created_at,
----+//         });
----+//     }
----+//     Ok(filtered_projects)
----+// }
----+
----+pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
----+    // We use DISTINCT in case user has multiple roles
----+    let records = sqlx::query!(
----+        r#"
----+    SELECT DISTINCT p.id, p.name, p.key, p.owner_id, p.created_at 
----+    FROM projects p
----+    LEFT JOIN issues i ON p.id = i.project_id
----+    WHERE p.owner_id = $1
----+        OR i.assignee_id = $1
----+        OR i.reporter_id = $1
----+        "#,
----+        user_id
----+    )
----+    .fetch_all(pool)
----+    .await?;
----+
----+    let mut projects = Vec::new();
----+    for record in records {
----+        projects.push(Project {
----+            id: record.id,
----+            name: record.name,
----+            key: record.key,
----+            owner_id: record.owner_id,
----+            created_at: record.created_at,
----+        });
----+    }
----+
----+    Ok(projects)
----+}
----+
----+pub async fn delete_project(pool: &PgPool, project_id: i32) -> Result<(), DbError> {
----+    sqlx::query!("DELETE FROM projects WHERE id = $1", project_id)
----+        .execute(pool)
----+        .await?;
----+
----+    Ok(())
----+}
---- 
---- pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
----     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
----diff --git a/diff.txt b/diff.txt
----index 8ded169..09f8f24 100644
------- a/diff.txt
----+++ b/diff.txt
----@@ -1,290 +0,0 @@
-----diff --git a/Todo.md b/Todo.md
-----index 7c10465..580eb35 100644
-------- a/Todo.md
-----+++ b/Todo.md
-----@@ -24,7 +24,7 @@
----- 
----- 
----- ## Implement Database Access (Projects):
------- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
-----+- [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
----- - [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
----- - [ ] Write delete_project(pool, id) -> Result<(), DbError>
----- - [ ] Write tests for Project CRUD.
-----diff --git a/db/src/lib.rs b/db/src/lib.rs
-----index ccddeed..d77c143 100644
-------- a/db/src/lib.rs
-----+++ b/db/src/lib.rs
-----@@ -42,12 +42,15 @@ mod tests {
-----             id: 0, // Ignored by create_issue
-----             project_id: new_project_id,
-----             issue_number: 1,
-----+            issue_type: IssueType::Task,
-----             summary: "Original Title".to_string(),
-----             description: Some("Original Description".to_string()),
-----             status: IssueStatus::Open,
-----             priority: IssuePriority::Low,
-----             assignee_id: None,
-----+            reporter_id: 1,
-----             created_at: chrono::Utc::now(),
-----+            updated_at: chrono::Utc::now(),
-----         };
----- 
-----         // 3. Insert it into the database
-----diff --git a/db/src/operations.rs b/db/src/operations.rs
-----index 9dae91d..b6bcdca 100644
-------- a/db/src/operations.rs
-----+++ b/db/src/operations.rs
-----@@ -1,14 +1,20 @@
----- use crate::DbError;
------use jira_core::issue::{Issue, IssuePriority, IssueStatus};
-----+use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
----- use sqlx::PgPool;
----- use std::str::FromStr;
----- 
------pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32, DbError> {
-----+pub async fn create_project(
-----+    pool: &PgPool,
-----+    name: &str,
-----+    key: &str,
-----+    owner_id: i32,
-----+) -> Result<i32, DbError> {
-----     let new_project = sqlx::query!(
------        "INSERT INTO projects (name, key, created_at) VALUES ($1, $2, $3) RETURNING id",
-----+        "INSERT INTO projects (name, key, created_at, owner_id) VALUES ($1, $2, $3, $4) RETURNING id",
-----         name,
-----         key,
------        chrono::Utc::now()
-----+        chrono::Utc::now(),
-----+        owner_id,
-----     )
-----     .fetch_one(pool)
-----     .await?;
-----@@ -16,6 +22,8 @@ pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32,
-----     Ok(new_project.id)
----- }
----- 
-----+// pub async fn get_all_projects(pool: &PgPool)  {}
-----+
----- pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
-----     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
-----         .fetch_all(pool)
-----@@ -27,14 +35,23 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
-----             id: record.id,
-----             project_id: record.project_id,
-----             issue_number: record.issue_number,
-----+            // Issue Metadata
-----+            issue_type: IssueType::from_str(&record.issue_type)
-----+                .map_err(|_| anyhow::anyhow!("Invalid issue type: {}", record.issue_type))?,
-----             summary: record.summary,
-----             description: record.description,
-----             status: IssueStatus::from_str(&record.status)
-----                 .map_err(|_| anyhow::anyhow!("Invalid issue status: {}", record.status))?,
-----             priority: IssuePriority::from_str(&record.priority)
-----                 .map_err(|_| anyhow::anyhow!("Invalid issue priority: {}", record.priority))?,
-----+
-----+            // Users involved
-----             assignee_id: record.assignee_id,
-----+            reporter_id: record.reporter_id,
-----+
-----+            // Timestamps
-----             created_at: record.created_at,
-----+            updated_at: record.updated_at,
-----         };
-----         issues.push(issue);
-----     }
-----@@ -45,18 +62,20 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
----- pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
-----     let status_str = issue.status.as_str();
-----     let priority_str = issue.priority.as_str();
-----+    let issue_type_str = issue.issue_type.as_str();
-----     let result = sqlx::query!(
------        "INSERT INTO issues (project_id, issue_number, summary, description, status, priority, assignee_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
-----+        "INSERT INTO issues (project_id, issue_number, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
-----         issue.project_id,
-----         issue.issue_number,
-----+        issue_type_str,
-----         issue.summary,
-----         issue.description.as_deref(),
-----         status_str,
------        // issue.status.as_str(),
------        // issue.priority.as_str(),
-----         priority_str,
-----         issue.assignee_id,
-----+        issue.reporter_id,
-----         issue.created_at,
-----+        issue.updated_at,
-----     )
-----     .fetch_one(pool)
-----     .await?;
-----@@ -66,16 +85,20 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError>
----- pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
-----     let status_str = issue.status.as_str();
-----     let priority_str = issue.priority.as_str();
-----+    let issue_type_str = issue.issue_type.as_str();
-----     let result = sqlx::query!(
------        "UPDATE issues SET project_id = $1, issue_number = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, created_at = $8 WHERE id = $9 RETURNING id",
-----+        "UPDATE issues SET project_id = $1, issue_number = $2, issue_type = $3, summary = $4, description = $5, status = $6, priority = $7, assignee_id = $8, reporter_id = $9, created_at = $10, updated_at = $11 WHERE id = $12 RETURNING id",
-----         issue.project_id,
-----         issue.issue_number,
-----+        issue_type_str,
-----         issue.summary,
-----         issue.description.as_deref(),
-----         status_str,
-----         priority_str,
-----         issue.assignee_id,
-----+        issue.reporter_id,
-----         issue.created_at,
-----+        issue.updated_at,
-----         issue.id,
-----     )
-----     .fetch_one(pool)
-----diff --git a/jira_core/src/issue.rs b/jira_core/src/issue.rs
-----index b261b12..0b2fa42 100644
-------- a/jira_core/src/issue.rs
-----+++ b/jira_core/src/issue.rs
-----@@ -7,12 +7,21 @@ pub struct Issue {
-----     pub id: i32,
-----     pub project_id: i32,
-----     pub issue_number: i32,
-----+
-----+    // Issue metadata
-----+    pub issue_type: IssueType,
-----     pub summary: String,
-----     pub description: Option<String>,
-----     pub status: IssueStatus,
-----     pub priority: IssuePriority,
-----+
-----+    // Users involved
-----     pub assignee_id: Option<i32>,
-----+    pub reporter_id: i32,
-----+
-----+    // Timestamps
-----     pub created_at: chrono::DateTime<chrono::Utc>,
-----+    pub updated_at: chrono::DateTime<chrono::Utc>,
----- }
----- 
----- #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-----@@ -42,7 +51,7 @@ impl FromStr for IssueStatus {
-----             "InProgress" => Ok(IssueStatus::InProgress),
-----             "Resolved" => Ok(IssueStatus::Resolved),
-----             "Closed" => Ok(IssueStatus::Closed),
------            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
-----+            _ => Err(anyhow::anyhow!("Invalid issue status: {s}")),
-----         }
-----     }
----- }
-----@@ -75,7 +84,37 @@ impl FromStr for IssuePriority {
-----             "Medium" => Ok(IssuePriority::Medium),
-----             "High" => Ok(IssuePriority::High),
-----             "Urgent" => Ok(IssuePriority::Urgent),
------            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
-----+            _ => Err(anyhow::anyhow!("Invalid issue priority: {s}")),
-----+        }
-----+    }
-----+}
-----+
-----+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-----+pub enum IssueType {
-----+    Bug,
-----+    Task,
-----+    Feature,
-----+}
-----+
-----+impl IssueType {
-----+    pub fn as_str(&self) -> &str {
-----+        match self {
-----+            IssueType::Bug => "Bug",
-----+            IssueType::Task => "Task",
-----+            IssueType::Feature => "Feature",
-----+        }
-----+    }
-----+}
-----+
-----+impl FromStr for IssueType {
-----+    type Err = anyhow::Error;
-----+
-----+    fn from_str(s: &str) -> Result<Self, Self::Err> {
-----+        match s {
-----+            "Bug" => Ok(IssueType::Bug),
-----+            "Task" => Ok(IssueType::Task),
-----+            "Feature" => Ok(IssueType::Feature),
-----+            _ => Err(anyhow::anyhow!("Invalid issue type: {s}")),
-----         }
-----     }
----- }
-----diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
-----index 0b7cef6..40cdf11 100644
-------- a/jira_core/src/lib.rs
-----+++ b/jira_core/src/lib.rs
-----@@ -1,17 +1,2 @@
------pub fn add(left: u64, right: u64) -> u64 {
------    left + right
------}
------
------#[cfg(test)]
------mod tests {
------    use super::*;
------
------    #[test]
------    fn it_works() {
------        let result = add(2, 2);
------        assert_eq!(result, 4);
------    }
------}
------
----- pub mod issue;
----- pub mod project;
-----diff --git a/jira_core/src/project.rs b/jira_core/src/project.rs
-----index d02fb64..ba7229d 100644
-------- a/jira_core/src/project.rs
-----+++ b/jira_core/src/project.rs
-----@@ -5,5 +5,6 @@ pub struct Project {
-----     pub id: i32,
-----     pub name: String,
-----     pub key: String,
-----+    pub owner_id: i32,
-----     pub created_at: chrono::DateTime<chrono::Utc>,
----- }
-----diff --git a/migrations/20260710115729_create_initial_schema.up.sql b/migrations/20260710115729_create_initial_schema.up.sql
-----index 07c4a1c..66e9407 100644
-------- a/migrations/20260710115729_create_initial_schema.up.sql
-----+++ b/migrations/20260710115729_create_initial_schema.up.sql
-----@@ -12,22 +12,35 @@ CREATE TABLE IF NOT EXISTS projects (
-----     id SERIAL PRIMARY KEY,
-----     key VARCHAR(50) UNIQUE NOT NULL,
-----     name VARCHAR(255) NOT NULL,
------    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
-----+    owner_id INTEGER NOT NULL, 
-----+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-----+
-----+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
----- );
----- 
----- CREATE TABLE IF NOT EXISTS issues (
-----     id SERIAL PRIMARY KEY,
-----     project_id INTEGER NOT NULL,
-----     issue_number INTEGER NOT NULL,
-----+
-----+    -- Issue Metadata
-----+    issue_type VARCHAR(50) NOT NULL, -- e.g Bug, Task, etc.
-----     summary VARCHAR(255) NOT NULL,
-----     description TEXT,
-----     status VARCHAR(50) NOT NULL,
-----     priority VARCHAR(50) NOT NULL,
------    assignee_id INTEGER,
-----+
-----+    -- User involved
-----+    assignee_id INTEGER, -- who is fixing the issue (can be null) 
-----+    reporter_id INTEGER NOT NULL, -- who created issue,
-----+    
-----+    -- Timestamps 
-----     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
-----+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
----- 
-----     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
-----     FOREIGN KEY (assignee_id) REFERENCES users(id) ON DELETE SET NULL,
-----+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
----- 
-----     -- This ensures each issue number is unique within a project
-----     UNIQUE(project_id, issue_number)
----diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
----index 40cdf11..4ffbd53 100644
------- a/jira_core/src/lib.rs
----+++ b/jira_core/src/lib.rs
----@@ -1,2 +1,3 @@
---- pub mod issue;
---- pub mod project;
----+pub mod user;
---diff --git a/jira_core/src/user.rs b/jira_core/src/user.rs
---index 345d81d..6a823ea 100644
------ a/jira_core/src/user.rs
---+++ b/jira_core/src/user.rs
---@@ -1,8 +1,11 @@
---+use serde::{Deserialize, Serialize};
---+
---+#[derive(Debug, Clone, Serialize, Deserialize)]
--- pub struct User {
----    id: i32,
----    username: String,
----    role: String,          // Todo create UserRole struct
----    email: String,         // Todo email validation later?
----    password_hash: String, // ?
----    created_at: chrono::DateTime<chrono::Utc>,
---+    // pub id: i32,
---+    pub username: String,
---+    pub role: String,          // Todo create UserRole struct
---+    pub email: String,         // Todo email validation later?
---+    pub password_hash: String, // ?
---+    pub created_at: chrono::DateTime<chrono::Utc>,
--- }
--diff --git a/gui/Cargo.toml b/gui/Cargo.toml
--index a6a19ca..76a5eec 100644
----- a/gui/Cargo.toml
--+++ b/gui/Cargo.toml
--@@ -4,9 +4,10 @@ version = "0.1.0"
-- edition = "2024"
-- 
+- - [x] Add iced, tokio, and dotenvy to gui/Cargo.toml.
+--- [ ] Write the main() function to load .env and initialize the PgPool.
+--- [ ] Define the App State (gui/src/app.rs):
+--- [ ] Create struct AppState containing the PgPool.
+-+- [x] Write the main() function to load .env and initialize the PgPool.
+-+- [x] Define the App State (gui/src/app.rs):
+-+- [x] Create struct AppState containing the PgPool.
+-+- [ ] Create login screen **CURRENT**
+- - [ ] Add active_project_id: Option<i32> to state.
+- - [ ] Create enum ViewState { Loading, ProjectList, Board, Error(String) } and add it to state.
+- - [ ] Define the Messages (gui/src/message.rs):
+-diff --git a/db/Cargo.toml b/db/Cargo.toml
+-index 8938b89..6b1dfe4 100644
+---- a/db/Cargo.toml
+-+++ b/db/Cargo.toml
+-@@ -6,10 +6,10 @@ edition = "2024"
 - [dependencies]
---jira_core = { path = "../jira_core" }
--+anyhow = { workspace = true }
-- db = { path = "../db" }
--+dotenvy = { workspace = true }
-- iced = { workspace = true }
--+jira_core = { path = "../jira_core" }
--+sqlx.workspace = true
-- tokio = { workspace = true }
---anyhow = { workspace = true }
+- anyhow = { workspace = true }
+- chrono = { workspace = true }
+-+dotenvy.workspace = true
+- jira_core = { path = "../jira_core" }
+- sqlx = { workspace = true }
+- thiserror = { workspace = true }
+- 
+- [dev-dependencies]
 --dotenvy = { workspace = true }
--diff --git a/gui/src/main.rs b/gui/src/main.rs
--index 47ad8c6..533c823 100644
----- a/gui/src/main.rs
--+++ b/gui/src/main.rs
--@@ -1,3 +1,88 @@
---fn main() {
---    println!("Hello World!");
+- tokio = { workspace = true }
+-diff --git a/db/src/lib.rs b/db/src/lib.rs
+-index f341194..8b7065e 100644
+---- a/db/src/lib.rs
+-+++ b/db/src/lib.rs
+-@@ -218,3 +218,15 @@ pub enum DbError {
+-     #[error("Unexpected error: {0}")]
+-     Unexpected(#[from] anyhow::Error),
+- }
+-+
 -+use anyhow::{Context, Result};
--+use iced::widget::{container, text};
--+use iced::{Element, Length, Task};
 -+use sqlx::PgPool;
--+
--+pub fn main() -> iced::Result {
--+    iced::application(JiraApp::new, JiraApp::update, JiraApp::view)
--+        .title("Anti-Jira")
--+        .run()
--+}
--+
--+// Our core application state
--+struct JiraApp {
--+    is_loading: bool,
--+    status_message: String,
--+    pool: Option<PgPool>,
--+}
--+
--+// The messages that drive our application's state machine
--+#[derive(Debug, Clone)]
--+pub enum Message {
--+    AppStarted,
--+    DatabaseConnected(Result<PgPool, String>),
--+}
--+
--+impl JiraApp {
--+    fn new() -> (Self, Task<Message>) {
--+        (
--+            Self {
--+                is_loading: true,
--+                status_message: "Initializing...".to_string(),
--+                pool: None,
--+            },
--+            // Immediately dispatch our AppStarted message when the GUI boots
--+            Task::done(Message::AppStarted),
--+        )
--+    }
--+
--+    fn update(&mut self, message: Message) -> Task<Message> {
--+        match message {
--+            Message::AppStarted => {
--+                self.status_message = "Connecting to database...".to_string();
--+
--+                // Spawn a Tokio async task to connect to the DB in the background
--+                Task::perform(connect_to_db(), |res| {
--+                    Message::DatabaseConnected(res.map_err(|e| format!("{:#}", e)))
--+                })
--+            }
--+            Message::DatabaseConnected(Ok(pool)) => {
--+                self.is_loading = false;
--+                self.status_message = "Connected! Welcome to Anti-Jira.".to_string();
--+                self.pool = Some(pool);
--+                Task::none()
--+            }
--+            Message::DatabaseConnected(Err(e)) => {
--+                self.is_loading = false;
--+                self.status_message = format!("Database Error: {}", e);
--+                Task::none()
--+            }
--+        }
--+    }
--+
--+    fn view(&self) -> Element<'_, Message> {
--+        // A simple centered text display for our bootstrapping phase
--+        let content = text(&self.status_message).size(24);
--+
--+        container(content)
--+            .width(Length::Fill)
--+            .height(Length::Fill)
--+            .center_x(Length::Fill) // Centers horizontally
--+            .center_y(Length::Fill) // Centers vertically
--+            .into()
--+    }
--+}
--+
--+// A mock async function to simulate database connection time
--+// In the next step, we will replace this with your actual sqlx PgPool connection!
--+async fn connect_to_db() -> Result<PgPool> {
--+    // tokio::time::sleep(std::time::Duration::from_millis(800)).await;
+-+pub async fn connect_to_db() -> Result<PgPool> {
 -+    dotenvy::dotenv().ok();
 -+    let db_url = std::env::var("DATABASE_URL")
 -+        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
 -+    let pool = PgPool::connect(&db_url)
 -+        .await
 -+        .context("Failed to establish a connection to Postgres. Is docker running?")?;
--+    // Simulate a success
 -+    Ok(pool)
+-+}
+-diff --git a/db/src/operations.rs b/db/src/operations.rs
+-index beff4f3..7e64fd8 100644
+---- a/db/src/operations.rs
+-+++ b/db/src/operations.rs
+-@@ -72,11 +72,13 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
+-             email: user.email,
+-             password_hash: user.password_hash,
+-             created_at: user.created_at,
+-+            ..Default::default()
+-         });
+-     }
+- 
+-     Ok(users)
 - }
--diff --git a/src/main.rs b/src/main.rs
--deleted file mode 100644
--index e7a11a9..0000000
----- a/src/main.rs
--+++ /dev/null
--@@ -1,3 +0,0 @@
---fn main() {
---    println!("Hello, world!");
+-+// impl Default
+- 
+- pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+-     // We use DISTINCT in case user has multiple roles
+-diff --git a/diff.txt b/diff.txt
+-index 46b7707..e28d2e7 100644
+---- a/diff.txt
+-+++ b/diff.txt
+-@@ -1,797 +0,0 @@
+--diff --git a/Cargo.lock b/Cargo.lock
+--index 4ee7512..e27045d 100644
+----- a/Cargo.lock
+--+++ b/Cargo.lock
+--@@ -1350,6 +1350,7 @@ dependencies = [
+--  "dotenvy",
+--  "iced",
+--  "jira_core",
+--+ "sqlx",
+--  "tokio",
+-- ]
+-- 
+--@@ -1802,10 +1803,6 @@ version = "1.0.18"
+-- source = "registry+https://github.com/rust-lang/crates.io-index"
+-- checksum = "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682"
+-- 
+---[[package]]
+---name = "jira_clone"
+---version = "0.1.0"
+---
+-- [[package]]
+-- name = "jira_core"
+-- version = "0.1.0"
+--diff --git a/Cargo.toml b/Cargo.toml
+--index cac8b31..53aa835 100644
+----- a/Cargo.toml
+--+++ b/Cargo.toml
+--@@ -1,7 +1,7 @@
+---[package]
+---name = "jira_clone"
+---version = "0.1.0"
+---edition = "2024"
+--+# [package]
+--+# name = "jira_clone"
+--+# version = "0.1.0"
+--+# edition = "2024"
+-- 
+-- [workspace]
+-- resolver = "3"
+--diff --git a/Todo.md b/Todo.md
+--index 1f339bb..acf8a3a 100644
+----- a/Todo.md
+--+++ b/Todo.md
+--@@ -34,7 +34,7 @@
+-- 
+-- ## Phase 2: Core State & Bootstrapping (The Engine)
+-- ### GUI Setup:
+---- [ ] Add iced, tokio, and dotenvy to gui/Cargo.toml.
+--+- [x] Add iced, tokio, and dotenvy to gui/Cargo.toml.
+-- - [ ] Write the main() function to load .env and initialize the PgPool.
+-- - [ ] Define the App State (gui/src/app.rs):
+-- - [ ] Create struct AppState containing the PgPool.
+--diff --git a/diff.txt b/diff.txt
+--index 9b4a020..e69de29 100644
+----- a/diff.txt
+--+++ b/diff.txt
+--@@ -1,618 +0,0 @@
+---diff --git a/Todo.md b/Todo.md
+---index 93d7097..1f339bb 100644
+------ a/Todo.md
+---+++ b/Todo.md
+---@@ -29,8 +29,8 @@
+--- - [x] Write delete_project(pool, id) -> Result<(), DbError>
+--- - [x] Write tests for Project CRUD.
+--- ### Implement Database Access (Users):
+----- [ ] Write create_user(...) and get_all_users(...).
+----- [ ] Write tests for User CRUD.
+---+- [x] Write create_user(...) and get_all_users(...).
+---+- [x] Write tests for User CRUD.
+--- 
+--- ## Phase 2: Core State & Bootstrapping (The Engine)
+--- ### GUI Setup:
+---diff --git a/db/src/lib.rs b/db/src/lib.rs
+---index e081de1..f341194 100644
+------ a/db/src/lib.rs
+---+++ b/db/src/lib.rs
+---@@ -2,7 +2,7 @@
+--- mod tests {
+---     use sqlx::PgPool;
+--- 
+----    use crate::operations::{create_project, get_user_projects};
+---+    use crate::operations::{create_project, read_user_projects};
+--- 
+---     #[tokio::test]
+---     async fn test_fetch_issues() {
+---@@ -169,7 +169,7 @@ mod tests {
+--- 
+---         assert!(project_id > 0, "Project id should be valid");
+--- 
+----        let user_project = get_user_projects(&pool, user_id)
+---+        let user_project = read_user_projects(&pool, user_id)
+---             .await
+---             .expect("Failed to fetch user projects");
+--- 
+---@@ -178,6 +178,26 @@ mod tests {
+---             "Newly created project should be appear in user's project list"
+---         );
+---     }
+---+
+---+    #[tokio::test]
+---+    async fn create_user_test() {
+---+        use crate::operations::create_user;
+---+        dotenvy::dotenv().ok();
+---+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+---+        let pool = PgPool::connect(&db_url).await.unwrap();
+---+
+---+        let new_user = jira_core::user::User {
+---+            username: "John Doe".to_string(),
+---+            role: "Admin".to_string(),
+---+            email: "johndoepool@gmail.com".to_string(),
+---+            password_hash: "29299ajajasdasdaaaaaaakakak".to_string(),
+---+            created_at: chrono::Utc::now(),
+---+        };
+---+
+---+        let result = create_user(&pool, &new_user).await.unwrap();
+---+        println!("Successfully created user with id {}", result);
+---+        assert!(result > 0);
+---+    }
+--- }
+--- 
+--- pub mod operations;
+---diff --git a/db/src/operations.rs b/db/src/operations.rs
+---index 513032a..beff4f3 100644
+------ a/db/src/operations.rs
+---+++ b/db/src/operations.rs
+---@@ -1,6 +1,7 @@
+--- use crate::DbError;
+--- use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+--- use jira_core::project::Project;
+---+use jira_core::user::User;
+--- use sqlx::PgPool;
+--- use std::str::FromStr;
+--- 
+---@@ -46,8 +47,38 @@ pub async fn create_project(
+--- //     }
+--- //     Ok(filtered_projects)
+--- // }
+---+pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, DbError> {
+---+    let new_user = sqlx::query!(
+---+        "INSERT INTO users (username, role, email, password_hash, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+---+        user.username,
+---+        user.role,
+---+        user.email,
+---+        user.password_hash,
+---+        user.created_at,
+---+    ).fetch_one(pool).await?;
+--- 
+----pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+---+    Ok(new_user.id)
+---+}
+---+
+---+pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
+---+    let records = sqlx::query!("SELECT * FROM users").fetch_all(pool).await?;
+---+
+---+    let mut users = Vec::new();
+---+    for user in records {
+---+        users.push(User {
+---+            // id: user.id,
+---+            username: user.username,
+---+            role: user.role,
+---+            email: user.email,
+---+            password_hash: user.password_hash,
+---+            created_at: user.created_at,
+---+        });
+---+    }
+---+
+---+    Ok(users)
+---+}
+---+
+---+pub async fn read_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+---     // We use DISTINCT in case user has multiple roles
+---     let records = sqlx::query!(
+---         r#"
+---diff --git a/diff.txt b/diff.txt
+---index bb772e3..e69de29 100644
+------ a/diff.txt
+---+++ b/diff.txt
+---@@ -1,475 +0,0 @@
+----diff --git a/.gitignore b/.gitignore
+----index 3582f2c..dd8b5a7 100644
+------- a/.gitignore
+----+++ b/.gitignore
+----@@ -1,2 +1,3 @@
+---- /target
+---- ./Cargo.lock
+----+./diff.txt
+----diff --git a/Todo.md b/Todo.md
+----index 580eb35..93d7097 100644
+------- a/Todo.md
+----+++ b/Todo.md
+----@@ -25,10 +25,10 @@
+---- 
+---- ## Implement Database Access (Projects):
+---- - [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+------ [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
+------ [ ] Write delete_project(pool, id) -> Result<(), DbError>
+------ [ ] Write tests for Project CRUD.
+------ [ ] Implement Database Access (Users):
+----+- [x] Write get_user_projects(pool, user_id) -> Result<Vec<Project>, DbError>
+----+- [x] Write delete_project(pool, id) -> Result<(), DbError>
+----+- [x] Write tests for Project CRUD.
+----+### Implement Database Access (Users):
+---- - [ ] Write create_user(...) and get_all_users(...).
+---- - [ ] Write tests for User CRUD.
+---- 
+----diff --git a/db/src/lib.rs b/db/src/lib.rs
+----index d77c143..e081de1 100644
+------- a/db/src/lib.rs
+----+++ b/db/src/lib.rs
+----@@ -2,6 +2,8 @@
+---- mod tests {
+----     use sqlx::PgPool;
+---- 
+----+    use crate::operations::{create_project, get_user_projects};
+----+
+----     #[tokio::test]
+----     async fn test_fetch_issues() {
+----         dotenvy::dotenv().ok();
+----@@ -131,6 +133,51 @@ mod tests {
+----     //     );
+----     //     assert!(result > 0);
+----     // }
+----+
+----+    #[tokio::test]
+----+    async fn test_project_crud_workflow() {
+----+        dotenvy::dotenv().ok();
+----+        let db_url = std::env::var("DATABASE_URL").expect("DATABASE_URL not set");
+----+        let pool = PgPool::connect(&db_url).await.unwrap();
+----+
+----+        let user_record = sqlx::query!(
+----+            "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) ON CONFLICT DO NOTHING RETURNING id",
+----+            "project_tester",
+----+            "admin",
+----+            "tester@test.com",
+----+            "hash"
+----+        ).fetch_optional(&pool).await.unwrap();
+----+
+----+        let user_id = match user_record {
+----+            Some(record) => record.id,
+----+            None => {
+----+                sqlx::query!("SELECT id FROM users WHERE username = 'project_tester'")
+----+                    .fetch_one(&pool)
+----+                    .await
+----+                    .unwrap()
+----+                    .id
+----+            }
+----+        };
+----+
+----+        let timestamp = chrono::Utc::now().timestamp_subsec_nanos();
+----+        let project_key = format!("T{timestamp}", timestamp = timestamp % 100000);
+----+        let project_name = format!("Test Project {}", timestamp);
+----+
+----+        let project_id = create_project(&pool, &project_name, &project_key, user_id)
+----+            .await
+----+            .expect("Failed to create project");
+----+
+----+        assert!(project_id > 0, "Project id should be valid");
+----+
+----+        let user_project = get_user_projects(&pool, user_id)
+----+            .await
+----+            .expect("Failed to fetch user projects");
+----+
+----+        assert!(
+----+            user_project.iter().any(|p| p.id == project_id),
+----+            "Newly created project should be appear in user's project list"
+----+        );
+----+    }
+---- }
+---- 
+---- pub mod operations;
+----diff --git a/db/src/operations.rs b/db/src/operations.rs
+----index b6bcdca..513032a 100644
+------- a/db/src/operations.rs
+----+++ b/db/src/operations.rs
+----@@ -1,5 +1,6 @@
+---- use crate::DbError;
+---- use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+----+use jira_core::project::Project;
+---- use sqlx::PgPool;
+---- use std::str::FromStr;
+---- 
+----@@ -22,7 +23,67 @@ pub async fn create_project(
+----     Ok(new_project.id)
+---- }
+---- 
+-----// pub async fn get_all_projects(pool: &PgPool)  {}
+----+// MAYBE I'll use it later
+----+//
+----+// pub async fn get_all_projects_by_owner(
+----+//     pool: &PgPool,
+----+//     user_id: i32,
+----+// ) -> Result<Vec<Project>, DbError> {
+----+//     let records = sqlx::query!("SELECT * FROM projects WHERE owner_id = $1", user_id)
+----+//         .fetch_all(pool)
+----+//         .await?;
+----+//
+----+//     let mut filtered_projects = Vec::new();
+----+//
+----+//     for record in records {
+----+//         filtered_projects.push(Project {
+----+//             id: record.id,
+----+//             name: record.name,
+----+//             key: record.key,
+----+//             owner_id: record.owner_id,
+----+//             created_at: record.created_at,
+----+//         });
+----+//     }
+----+//     Ok(filtered_projects)
+----+// }
+----+
+----+pub async fn get_user_projects(pool: &PgPool, user_id: i32) -> Result<Vec<Project>, DbError> {
+----+    // We use DISTINCT in case user has multiple roles
+----+    let records = sqlx::query!(
+----+        r#"
+----+    SELECT DISTINCT p.id, p.name, p.key, p.owner_id, p.created_at 
+----+    FROM projects p
+----+    LEFT JOIN issues i ON p.id = i.project_id
+----+    WHERE p.owner_id = $1
+----+        OR i.assignee_id = $1
+----+        OR i.reporter_id = $1
+----+        "#,
+----+        user_id
+----+    )
+----+    .fetch_all(pool)
+----+    .await?;
+----+
+----+    let mut projects = Vec::new();
+----+    for record in records {
+----+        projects.push(Project {
+----+            id: record.id,
+----+            name: record.name,
+----+            key: record.key,
+----+            owner_id: record.owner_id,
+----+            created_at: record.created_at,
+----+        });
+----+    }
+----+
+----+    Ok(projects)
+----+}
+----+
+----+pub async fn delete_project(pool: &PgPool, project_id: i32) -> Result<(), DbError> {
+----+    sqlx::query!("DELETE FROM projects WHERE id = $1", project_id)
+----+        .execute(pool)
+----+        .await?;
+----+
+----+    Ok(())
+----+}
+---- 
+---- pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
+----     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
+----diff --git a/diff.txt b/diff.txt
+----index 8ded169..09f8f24 100644
+------- a/diff.txt
+----+++ b/diff.txt
+----@@ -1,290 +0,0 @@
+-----diff --git a/Todo.md b/Todo.md
+-----index 7c10465..580eb35 100644
+-------- a/Todo.md
+-----+++ b/Todo.md
+-----@@ -24,7 +24,7 @@
+----- 
+----- 
+----- ## Implement Database Access (Projects):
+------- [ ] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+-----+- [x] Write create_project(pool, name, key) -> Result<i32, DbError>    key means short version of the project's name e.g. "Engineering" => "ENG"
+----- - [ ] Write get_all_projects(pool) -> Result<Vec<Project>, DbError>
+----- - [ ] Write delete_project(pool, id) -> Result<(), DbError>
+----- - [ ] Write tests for Project CRUD.
+-----diff --git a/db/src/lib.rs b/db/src/lib.rs
+-----index ccddeed..d77c143 100644
+-------- a/db/src/lib.rs
+-----+++ b/db/src/lib.rs
+-----@@ -42,12 +42,15 @@ mod tests {
+-----             id: 0, // Ignored by create_issue
+-----             project_id: new_project_id,
+-----             issue_number: 1,
+-----+            issue_type: IssueType::Task,
+-----             summary: "Original Title".to_string(),
+-----             description: Some("Original Description".to_string()),
+-----             status: IssueStatus::Open,
+-----             priority: IssuePriority::Low,
+-----             assignee_id: None,
+-----+            reporter_id: 1,
+-----             created_at: chrono::Utc::now(),
+-----+            updated_at: chrono::Utc::now(),
+-----         };
+----- 
+-----         // 3. Insert it into the database
+-----diff --git a/db/src/operations.rs b/db/src/operations.rs
+-----index 9dae91d..b6bcdca 100644
+-------- a/db/src/operations.rs
+-----+++ b/db/src/operations.rs
+-----@@ -1,14 +1,20 @@
+----- use crate::DbError;
+------use jira_core::issue::{Issue, IssuePriority, IssueStatus};
+-----+use jira_core::issue::{Issue, IssuePriority, IssueStatus, IssueType};
+----- use sqlx::PgPool;
+----- use std::str::FromStr;
+----- 
+------pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32, DbError> {
+-----+pub async fn create_project(
+-----+    pool: &PgPool,
+-----+    name: &str,
+-----+    key: &str,
+-----+    owner_id: i32,
+-----+) -> Result<i32, DbError> {
+-----     let new_project = sqlx::query!(
+------        "INSERT INTO projects (name, key, created_at) VALUES ($1, $2, $3) RETURNING id",
+-----+        "INSERT INTO projects (name, key, created_at, owner_id) VALUES ($1, $2, $3, $4) RETURNING id",
+-----         name,
+-----         key,
+------        chrono::Utc::now()
+-----+        chrono::Utc::now(),
+-----+        owner_id,
+-----     )
+-----     .fetch_one(pool)
+-----     .await?;
+-----@@ -16,6 +22,8 @@ pub async fn create_project(pool: &PgPool, name: &str, key: &str) -> Result<i32,
+-----     Ok(new_project.id)
+----- }
+----- 
+-----+// pub async fn get_all_projects(pool: &PgPool)  {}
+-----+
+----- pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Issue>, DbError> {
+-----     let records = sqlx::query!("SELECT * FROM issues WHERE project_id = $1", project_id)
+-----         .fetch_all(pool)
+-----@@ -27,14 +35,23 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
+-----             id: record.id,
+-----             project_id: record.project_id,
+-----             issue_number: record.issue_number,
+-----+            // Issue Metadata
+-----+            issue_type: IssueType::from_str(&record.issue_type)
+-----+                .map_err(|_| anyhow::anyhow!("Invalid issue type: {}", record.issue_type))?,
+-----             summary: record.summary,
+-----             description: record.description,
+-----             status: IssueStatus::from_str(&record.status)
+-----                 .map_err(|_| anyhow::anyhow!("Invalid issue status: {}", record.status))?,
+-----             priority: IssuePriority::from_str(&record.priority)
+-----                 .map_err(|_| anyhow::anyhow!("Invalid issue priority: {}", record.priority))?,
+-----+
+-----+            // Users involved
+-----             assignee_id: record.assignee_id,
+-----+            reporter_id: record.reporter_id,
+-----+
+-----+            // Timestamps
+-----             created_at: record.created_at,
+-----+            updated_at: record.updated_at,
+-----         };
+-----         issues.push(issue);
+-----     }
+-----@@ -45,18 +62,20 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
+----- pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
+-----     let status_str = issue.status.as_str();
+-----     let priority_str = issue.priority.as_str();
+-----+    let issue_type_str = issue.issue_type.as_str();
+-----     let result = sqlx::query!(
+------        "INSERT INTO issues (project_id, issue_number, summary, description, status, priority, assignee_id, created_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING id",
+-----+        "INSERT INTO issues (project_id, issue_number, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
+-----         issue.project_id,
+-----         issue.issue_number,
+-----+        issue_type_str,
+-----         issue.summary,
+-----         issue.description.as_deref(),
+-----         status_str,
+------        // issue.status.as_str(),
+------        // issue.priority.as_str(),
+-----         priority_str,
+-----         issue.assignee_id,
+-----+        issue.reporter_id,
+-----         issue.created_at,
+-----+        issue.updated_at,
+-----     )
+-----     .fetch_one(pool)
+-----     .await?;
+-----@@ -66,16 +85,20 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError>
+----- pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
+-----     let status_str = issue.status.as_str();
+-----     let priority_str = issue.priority.as_str();
+-----+    let issue_type_str = issue.issue_type.as_str();
+-----     let result = sqlx::query!(
+------        "UPDATE issues SET project_id = $1, issue_number = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, created_at = $8 WHERE id = $9 RETURNING id",
+-----+        "UPDATE issues SET project_id = $1, issue_number = $2, issue_type = $3, summary = $4, description = $5, status = $6, priority = $7, assignee_id = $8, reporter_id = $9, created_at = $10, updated_at = $11 WHERE id = $12 RETURNING id",
+-----         issue.project_id,
+-----         issue.issue_number,
+-----+        issue_type_str,
+-----         issue.summary,
+-----         issue.description.as_deref(),
+-----         status_str,
+-----         priority_str,
+-----         issue.assignee_id,
+-----+        issue.reporter_id,
+-----         issue.created_at,
+-----+        issue.updated_at,
+-----         issue.id,
+-----     )
+-----     .fetch_one(pool)
+-----diff --git a/jira_core/src/issue.rs b/jira_core/src/issue.rs
+-----index b261b12..0b2fa42 100644
+-------- a/jira_core/src/issue.rs
+-----+++ b/jira_core/src/issue.rs
+-----@@ -7,12 +7,21 @@ pub struct Issue {
+-----     pub id: i32,
+-----     pub project_id: i32,
+-----     pub issue_number: i32,
+-----+
+-----+    // Issue metadata
+-----+    pub issue_type: IssueType,
+-----     pub summary: String,
+-----     pub description: Option<String>,
+-----     pub status: IssueStatus,
+-----     pub priority: IssuePriority,
+-----+
+-----+    // Users involved
+-----     pub assignee_id: Option<i32>,
+-----+    pub reporter_id: i32,
+-----+
+-----+    // Timestamps
+-----     pub created_at: chrono::DateTime<chrono::Utc>,
+-----+    pub updated_at: chrono::DateTime<chrono::Utc>,
+----- }
+----- 
+----- #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+-----@@ -42,7 +51,7 @@ impl FromStr for IssueStatus {
+-----             "InProgress" => Ok(IssueStatus::InProgress),
+-----             "Resolved" => Ok(IssueStatus::Resolved),
+-----             "Closed" => Ok(IssueStatus::Closed),
+------            _ => Err(anyhow::anyhow!("Invalid issue status: {}", s)),
+-----+            _ => Err(anyhow::anyhow!("Invalid issue status: {s}")),
+-----         }
+-----     }
+----- }
+-----@@ -75,7 +84,37 @@ impl FromStr for IssuePriority {
+-----             "Medium" => Ok(IssuePriority::Medium),
+-----             "High" => Ok(IssuePriority::High),
+-----             "Urgent" => Ok(IssuePriority::Urgent),
+------            _ => Err(anyhow::anyhow!("Invalid issue priority: {}", s)),
+-----+            _ => Err(anyhow::anyhow!("Invalid issue priority: {s}")),
+-----+        }
+-----+    }
+-----+}
+-----+
+-----+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+-----+pub enum IssueType {
+-----+    Bug,
+-----+    Task,
+-----+    Feature,
+-----+}
+-----+
+-----+impl IssueType {
+-----+    pub fn as_str(&self) -> &str {
+-----+        match self {
+-----+            IssueType::Bug => "Bug",
+-----+            IssueType::Task => "Task",
+-----+            IssueType::Feature => "Feature",
+-----+        }
+-----+    }
+-----+}
+-----+
+-----+impl FromStr for IssueType {
+-----+    type Err = anyhow::Error;
+-----+
+-----+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+-----+        match s {
+-----+            "Bug" => Ok(IssueType::Bug),
+-----+            "Task" => Ok(IssueType::Task),
+-----+            "Feature" => Ok(IssueType::Feature),
+-----+            _ => Err(anyhow::anyhow!("Invalid issue type: {s}")),
+-----         }
+-----     }
+----- }
+-----diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
+-----index 0b7cef6..40cdf11 100644
+-------- a/jira_core/src/lib.rs
+-----+++ b/jira_core/src/lib.rs
+-----@@ -1,17 +1,2 @@
+------pub fn add(left: u64, right: u64) -> u64 {
+------    left + right
+------}
+------
+------#[cfg(test)]
+------mod tests {
+------    use super::*;
+------
+------    #[test]
+------    fn it_works() {
+------        let result = add(2, 2);
+------        assert_eq!(result, 4);
+------    }
+------}
+------
+----- pub mod issue;
+----- pub mod project;
+-----diff --git a/jira_core/src/project.rs b/jira_core/src/project.rs
+-----index d02fb64..ba7229d 100644
+-------- a/jira_core/src/project.rs
+-----+++ b/jira_core/src/project.rs
+-----@@ -5,5 +5,6 @@ pub struct Project {
+-----     pub id: i32,
+-----     pub name: String,
+-----     pub key: String,
+-----+    pub owner_id: i32,
+-----     pub created_at: chrono::DateTime<chrono::Utc>,
+----- }
+-----diff --git a/migrations/20260710115729_create_initial_schema.up.sql b/migrations/20260710115729_create_initial_schema.up.sql
+-----index 07c4a1c..66e9407 100644
+-------- a/migrations/20260710115729_create_initial_schema.up.sql
+-----+++ b/migrations/20260710115729_create_initial_schema.up.sql
+-----@@ -12,22 +12,35 @@ CREATE TABLE IF NOT EXISTS projects (
+-----     id SERIAL PRIMARY KEY,
+-----     key VARCHAR(50) UNIQUE NOT NULL,
+-----     name VARCHAR(255) NOT NULL,
+------    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
+-----+    owner_id INTEGER NOT NULL, 
+-----+    created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+-----+
+-----+    FOREIGN KEY (owner_id) REFERENCES users(id) ON DELETE CASCADE
+----- );
+----- 
+----- CREATE TABLE IF NOT EXISTS issues (
+-----     id SERIAL PRIMARY KEY,
+-----     project_id INTEGER NOT NULL,
+-----     issue_number INTEGER NOT NULL,
+-----+
+-----+    -- Issue Metadata
+-----+    issue_type VARCHAR(50) NOT NULL, -- e.g Bug, Task, etc.
+-----     summary VARCHAR(255) NOT NULL,
+-----     description TEXT,
+-----     status VARCHAR(50) NOT NULL,
+-----     priority VARCHAR(50) NOT NULL,
+------    assignee_id INTEGER,
+-----+
+-----+    -- User involved
+-----+    assignee_id INTEGER, -- who is fixing the issue (can be null) 
+-----+    reporter_id INTEGER NOT NULL, -- who created issue,
+-----+    
+-----+    -- Timestamps 
+-----     created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+-----+    updated_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+----- 
+-----     FOREIGN KEY (project_id) REFERENCES projects(id) ON DELETE CASCADE,
+-----     FOREIGN KEY (assignee_id) REFERENCES users(id) ON DELETE SET NULL,
+-----+    FOREIGN KEY (reporter_id) REFERENCES users(id) ON DELETE CASCADE,
+----- 
+-----     -- This ensures each issue number is unique within a project
+-----     UNIQUE(project_id, issue_number)
+----diff --git a/jira_core/src/lib.rs b/jira_core/src/lib.rs
+----index 40cdf11..4ffbd53 100644
+------- a/jira_core/src/lib.rs
+----+++ b/jira_core/src/lib.rs
+----@@ -1,2 +1,3 @@
+---- pub mod issue;
+---- pub mod project;
+----+pub mod user;
+---diff --git a/jira_core/src/user.rs b/jira_core/src/user.rs
+---index 345d81d..6a823ea 100644
+------ a/jira_core/src/user.rs
+---+++ b/jira_core/src/user.rs
+---@@ -1,8 +1,11 @@
+---+use serde::{Deserialize, Serialize};
+---+
+---+#[derive(Debug, Clone, Serialize, Deserialize)]
+--- pub struct User {
+----    id: i32,
+----    username: String,
+----    role: String,          // Todo create UserRole struct
+----    email: String,         // Todo email validation later?
+----    password_hash: String, // ?
+----    created_at: chrono::DateTime<chrono::Utc>,
+---+    // pub id: i32,
+---+    pub username: String,
+---+    pub role: String,          // Todo create UserRole struct
+---+    pub email: String,         // Todo email validation later?
+---+    pub password_hash: String, // ?
+---+    pub created_at: chrono::DateTime<chrono::Utc>,
+--- }
+--diff --git a/gui/Cargo.toml b/gui/Cargo.toml
+--index a6a19ca..76a5eec 100644
+----- a/gui/Cargo.toml
+--+++ b/gui/Cargo.toml
+--@@ -4,9 +4,10 @@ version = "0.1.0"
+-- edition = "2024"
+-- 
+-- [dependencies]
+---jira_core = { path = "../jira_core" }
+--+anyhow = { workspace = true }
+-- db = { path = "../db" }
+--+dotenvy = { workspace = true }
+-- iced = { workspace = true }
+--+jira_core = { path = "../jira_core" }
+--+sqlx.workspace = true
+-- tokio = { workspace = true }
+---anyhow = { workspace = true }
+---dotenvy = { workspace = true }
+--diff --git a/gui/src/main.rs b/gui/src/main.rs
+--index 47ad8c6..533c823 100644
+----- a/gui/src/main.rs
+--+++ b/gui/src/main.rs
+--@@ -1,3 +1,88 @@
+---fn main() {
+---    println!("Hello World!");
+--+use anyhow::{Context, Result};
+--+use iced::widget::{container, text};
+--+use iced::{Element, Length, Task};
+--+use sqlx::PgPool;
+--+
+--+pub fn main() -> iced::Result {
+--+    iced::application(JiraApp::new, JiraApp::update, JiraApp::view)
+--+        .title("Anti-Jira")
+--+        .run()
+--+}
+--+
+--+// Our core application state
+--+struct JiraApp {
+--+    is_loading: bool,
+--+    status_message: String,
+--+    pool: Option<PgPool>,
+--+}
+--+
+--+// The messages that drive our application's state machine
+--+#[derive(Debug, Clone)]
+--+pub enum Message {
+--+    AppStarted,
+--+    DatabaseConnected(Result<PgPool, String>),
+--+}
+--+
+--+impl JiraApp {
+--+    fn new() -> (Self, Task<Message>) {
+--+        (
+--+            Self {
+--+                is_loading: true,
+--+                status_message: "Initializing...".to_string(),
+--+                pool: None,
+--+            },
+--+            // Immediately dispatch our AppStarted message when the GUI boots
+--+            Task::done(Message::AppStarted),
+--+        )
+--+    }
+--+
+--+    fn update(&mut self, message: Message) -> Task<Message> {
+--+        match message {
+--+            Message::AppStarted => {
+--+                self.status_message = "Connecting to database...".to_string();
+--+
+--+                // Spawn a Tokio async task to connect to the DB in the background
+--+                Task::perform(connect_to_db(), |res| {
+--+                    Message::DatabaseConnected(res.map_err(|e| format!("{:#}", e)))
+--+                })
+--+            }
+--+            Message::DatabaseConnected(Ok(pool)) => {
+--+                self.is_loading = false;
+--+                self.status_message = "Connected! Welcome to Anti-Jira.".to_string();
+--+                self.pool = Some(pool);
+--+                Task::none()
+--+            }
+--+            Message::DatabaseConnected(Err(e)) => {
+--+                self.is_loading = false;
+--+                self.status_message = format!("Database Error: {}", e);
+--+                Task::none()
+--+            }
+--+        }
+--+    }
+--+
+--+    fn view(&self) -> Element<'_, Message> {
+--+        // A simple centered text display for our bootstrapping phase
+--+        let content = text(&self.status_message).size(24);
+--+
+--+        container(content)
+--+            .width(Length::Fill)
+--+            .height(Length::Fill)
+--+            .center_x(Length::Fill) // Centers horizontally
+--+            .center_y(Length::Fill) // Centers vertically
+--+            .into()
+--+    }
+--+}
+--+
+--+// A mock async function to simulate database connection time
+--+// In the next step, we will replace this with your actual sqlx PgPool connection!
+--+async fn connect_to_db() -> Result<PgPool> {
+--+    // tokio::time::sleep(std::time::Duration::from_millis(800)).await;
+--+    dotenvy::dotenv().ok();
+--+    let db_url = std::env::var("DATABASE_URL")
+--+        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
+--+    let pool = PgPool::connect(&db_url)
+--+        .await
+--+        .context("Failed to establish a connection to Postgres. Is docker running?")?;
+--+    // Simulate a success
+--+    Ok(pool)
+-- }
+--diff --git a/src/main.rs b/src/main.rs
+--deleted file mode 100644
+--index e7a11a9..0000000
+----- a/src/main.rs
+--+++ /dev/null
+--@@ -1,3 +0,0 @@
+---fn main() {
+---    println!("Hello, world!");
+---}
+-diff --git a/gui/src/main.rs b/gui/src/main.rs
+-index 533c823..c96f80e 100644
+---- a/gui/src/main.rs
+-+++ b/gui/src/main.rs
+-@@ -1,88 +1,12 @@
+- use anyhow::{Context, Result};
+--use iced::widget::{container, text};
+--use iced::{Element, Length, Task};
+-+use app::App;
+- use sqlx::PgPool;
+- 
+--pub fn main() -> iced::Result {
+--    iced::application(JiraApp::new, JiraApp::update, JiraApp::view)
+--        .title("Anti-Jira")
+--        .run()
 --}
-diff --git a/gui/src/main.rs b/gui/src/main.rs
-index 533c823..c96f80e 100644
---- a/gui/src/main.rs
-+++ b/gui/src/main.rs
-@@ -1,88 +1,12 @@
- use anyhow::{Context, Result};
--use iced::widget::{container, text};
--use iced::{Element, Length, Task};
-+use app::App;
- use sqlx::PgPool;
+--
+--// Our core application state
+--struct JiraApp {
+--    is_loading: bool,
+--    status_message: String,
+--    pool: Option<PgPool>,
+--}
+--
+--// The messages that drive our application's state machine
+--#[derive(Debug, Clone)]
+--pub enum Message {
+--    AppStarted,
+--    DatabaseConnected(Result<PgPool, String>),
+--}
+--
+--impl JiraApp {
+--    fn new() -> (Self, Task<Message>) {
+--        (
+--            Self {
+--                is_loading: true,
+--                status_message: "Initializing...".to_string(),
+--                pool: None,
+--            },
+--            // Immediately dispatch our AppStarted message when the GUI boots
+--            Task::done(Message::AppStarted),
+--        )
+--    }
+-+pub mod app;
+-+pub mod components;
+-+pub mod messages;
+-+pub mod views;
+- 
+--    fn update(&mut self, message: Message) -> Task<Message> {
+--        match message {
+--            Message::AppStarted => {
+--                self.status_message = "Connecting to database...".to_string();
+--
+--                // Spawn a Tokio async task to connect to the DB in the background
+--                Task::perform(connect_to_db(), |res| {
+--                    Message::DatabaseConnected(res.map_err(|e| format!("{:#}", e)))
+--                })
+--            }
+--            Message::DatabaseConnected(Ok(pool)) => {
+--                self.is_loading = false;
+--                self.status_message = "Connected! Welcome to Anti-Jira.".to_string();
+--                self.pool = Some(pool);
+--                Task::none()
+--            }
+--            Message::DatabaseConnected(Err(e)) => {
+--                self.is_loading = false;
+--                self.status_message = format!("Database Error: {}", e);
+--                Task::none()
+--            }
+--        }
+--    }
+--
+--    fn view(&self) -> Element<'_, Message> {
+--        // A simple centered text display for our bootstrapping phase
+--        let content = text(&self.status_message).size(24);
+--
+--        container(content)
+--            .width(Length::Fill)
+--            .height(Length::Fill)
+--            .center_x(Length::Fill) // Centers horizontally
+--            .center_y(Length::Fill) // Centers vertically
+--            .into()
+--    }
+--}
+--
+--// A mock async function to simulate database connection time
+--// In the next step, we will replace this with your actual sqlx PgPool connection!
+--async fn connect_to_db() -> Result<PgPool> {
+--    // tokio::time::sleep(std::time::Duration::from_millis(800)).await;
+--    dotenvy::dotenv().ok();
+--    let db_url = std::env::var("DATABASE_URL")
+--        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
+--    let pool = PgPool::connect(&db_url)
+--        .await
+--        .context("Failed to establish a connection to Postgres. Is docker running?")?;
+--    // Simulate a success
+--    Ok(pool)
+-+pub fn main() -> iced::Result {
+-+    App::run()
+- }
+-diff --git a/jira_core/src/user.rs b/jira_core/src/user.rs
+-index 6a823ea..10b4585 100644
+---- a/jira_core/src/user.rs
+-+++ b/jira_core/src/user.rs
+-@@ -1,8 +1,8 @@
+- use serde::{Deserialize, Serialize};
+- 
+--#[derive(Debug, Clone, Serialize, Deserialize)]
+-+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+- pub struct User {
+--    // pub id: i32,
+-+    pub id: i32,
+-     pub username: String,
+-     pub role: String,          // Todo create UserRole struct
+-     pub email: String,         // Todo email validation later?
+diff --git a/jira_core/Cargo.toml b/jira_core/Cargo.toml
+index 70a5599..619ca61 100644
+--- a/jira_core/Cargo.toml
++++ b/jira_core/Cargo.toml
+@@ -4,7 +4,8 @@ version = "0.1.0"
+ edition = "2024"
  
--pub fn main() -> iced::Result {
--    iced::application(JiraApp::new, JiraApp::update, JiraApp::view)
--        .title("Anti-Jira")
--        .run()
--}
--
--// Our core application state
--struct JiraApp {
--    is_loading: bool,
--    status_message: String,
--    pool: Option<PgPool>,
--}
--
--// The messages that drive our application's state machine
--#[derive(Debug, Clone)]
--pub enum Message {
--    AppStarted,
--    DatabaseConnected(Result<PgPool, String>),
--}
--
--impl JiraApp {
--    fn new() -> (Self, Task<Message>) {
--        (
--            Self {
--                is_loading: true,
--                status_message: "Initializing...".to_string(),
--                pool: None,
--            },
--            // Immediately dispatch our AppStarted message when the GUI boots
--            Task::done(Message::AppStarted),
--        )
--    }
-+pub mod app;
-+pub mod components;
-+pub mod messages;
-+pub mod views;
- 
--    fn update(&mut self, message: Message) -> Task<Message> {
--        match message {
--            Message::AppStarted => {
--                self.status_message = "Connecting to database...".to_string();
--
--                // Spawn a Tokio async task to connect to the DB in the background
--                Task::perform(connect_to_db(), |res| {
--                    Message::DatabaseConnected(res.map_err(|e| format!("{:#}", e)))
--                })
--            }
--            Message::DatabaseConnected(Ok(pool)) => {
--                self.is_loading = false;
--                self.status_message = "Connected! Welcome to Anti-Jira.".to_string();
--                self.pool = Some(pool);
--                Task::none()
--            }
--            Message::DatabaseConnected(Err(e)) => {
--                self.is_loading = false;
--                self.status_message = format!("Database Error: {}", e);
--                Task::none()
--            }
--        }
--    }
--
--    fn view(&self) -> Element<'_, Message> {
--        // A simple centered text display for our bootstrapping phase
--        let content = text(&self.status_message).size(24);
--
--        container(content)
--            .width(Length::Fill)
--            .height(Length::Fill)
--            .center_x(Length::Fill) // Centers horizontally
--            .center_y(Length::Fill) // Centers vertically
--            .into()
--    }
--}
--
--// A mock async function to simulate database connection time
--// In the next step, we will replace this with your actual sqlx PgPool connection!
--async fn connect_to_db() -> Result<PgPool> {
--    // tokio::time::sleep(std::time::Duration::from_millis(800)).await;
--    dotenvy::dotenv().ok();
--    let db_url = std::env::var("DATABASE_URL")
--        .context("Missing 'DATABASE_URL' in the .env file. Please check your configuration")?;
--    let pool = PgPool::connect(&db_url)
--        .await
--        .context("Failed to establish a connection to Postgres. Is docker running?")?;
--    // Simulate a success
--    Ok(pool)
-+pub fn main() -> iced::Result {
-+    App::run()
- }
+ [dependencies]
+-serde = { workspace = true}
+-thiserror = { workspace = true}
+-chrono = { workspace = true}
+-anyhow = { workspace = true}
++anyhow = { workspace = true }
++chrono = { workspace = true }
++clap.workspace = true
++serde = { workspace = true }
++thiserror = { workspace = true }
 diff --git a/jira_core/src/user.rs b/jira_core/src/user.rs
-index 6a823ea..10b4585 100644
+index 10b4585..4318fee 100644
 --- a/jira_core/src/user.rs
 +++ b/jira_core/src/user.rs
-@@ -1,8 +1,8 @@
+@@ -1,11 +1,18 @@
++use clap::Args;
  use serde::{Deserialize, Serialize};
  
--#[derive(Debug, Clone, Serialize, Deserialize)]
-+#[derive(Default, Debug, Clone, Serialize, Deserialize)]
+-#[derive(Default, Debug, Clone, Serialize, Deserialize)]
++#[derive(Default, Debug, Clone, Serialize, Deserialize, Args)]
  pub struct User {
--    // pub id: i32,
-+    pub id: i32,
+-    pub id: i32,
++    #[arg(skip)]
++    pub id: Option<i32>,
++    #[arg(short, long)]
      pub username: String,
-     pub role: String,          // Todo create UserRole struct
-     pub email: String,         // Todo email validation later?
+-    pub role: String,          // Todo create UserRole struct
+-    pub email: String,         // Todo email validation later?
++    #[arg(short, long)]
++    pub role: String, // Todo create UserRole struct
++    #[arg(short, long)]
++    pub email: String, // Todo email validation later?
++    #[arg(short, long)]
+     pub password_hash: String, // ?
++    #[arg(skip)]
+     pub created_at: chrono::DateTime<chrono::Utc>,
+ }

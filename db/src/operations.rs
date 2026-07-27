@@ -66,7 +66,7 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
     let mut users = Vec::new();
     for user in records {
         users.push(User {
-            // id: user.id,
+            id: Some(user.id),
             username: user.username,
             role: user.role,
             email: user.email,

@@ -4,7 +4,8 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-serde = { workspace = true}
-thiserror = { workspace = true}
-chrono = { workspace = true}
-anyhow = { workspace = true}
+anyhow = { workspace = true }
+chrono = { workspace = true }
+clap.workspace = true
+serde = { workspace = true }
+thiserror = { workspace = true }

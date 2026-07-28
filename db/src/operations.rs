@@ -72,7 +72,6 @@ pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
             email: user.email,
             password_hash: user.password_hash,
             created_at: user.created_at,
-            ..Default::default()
         });
     }
 

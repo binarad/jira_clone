@@ -1,7 +1,7 @@
 use super::messages::Message;
 use db::connect_to_db;
 // use anyhow::Result;
-use iced::widget::{column, container, text};
+use iced::widget::{container, text};
 use iced::{Element, Length, Task};
 use jira_core::user::User;
 use sqlx::PgPool;

@@ -1,6 +1,4 @@
-use anyhow::{Context, Result};
 use app::App;
-use sqlx::PgPool;
 
 pub mod app;
 pub mod components;

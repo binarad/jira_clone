@@ -2,9 +2,10 @@ use clap::Parser;
 use comfy_table::{Table, modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL};
 use db::{
     connect_to_db,
-    operations::{create_user, get_all_users, read_user_projects},
+    operations::{get_all_users, read_user_projects},
+    traits::Creatable,
 };
-use jira_core::user::User;
+use jira_core::{project::Project, user::User};
 
 #[derive(Parser, Debug)]
 enum Operation {
@@ -19,8 +20,16 @@ enum Operation {
 
     /// Prints user related projects
     UserProject { user_id: i32 },
+
+    /// Create a new project
+    CreateProject {
+        #[command(flatten)]
+        project: Project,
+    },
 }
 
+/// Shows kanban board by the project
+// Board { project_id: i32 },
 #[derive(Parser, Debug)]
 #[command(version, about, long_about = None)]
 struct Args {
@@ -34,7 +43,9 @@ async fn main() {
     match args.operation {
         Operation::Users => show_all_users().await,
         Operation::UserProject { user_id } => show_user_projects(user_id).await,
-        Operation::CreateUser { user } => show_created_user(user).await,
+        // Operation::CreateUser { user } => show_created_user(user).await,
+        Operation::CreateUser { user } => show_created_entity(user).await,
+        Operation::CreateProject { project } => show_created_entity(project).await,
     };
 }
 
@@ -87,15 +98,45 @@ async fn show_user_projects(user_id: i32) {
     println!("{table}")
 }
 
-async fn show_created_user(user: User) {
+async fn show_created_entity<T: Creatable>(entity: T) {
     let pool = connect_to_db().await.unwrap();
-    let new_user = match create_user(&pool, &user).await {
-        Ok(new_user_id) => new_user_id,
-        Err(e) => {
-            println!("An Error Occured: {}", e);
-            return;
-        }
-    };
 
-    println!("User successfully created with ID: {}", new_user);
+    match entity.create_in_db(&pool).await {
+        Ok(new_id) => println!(
+            "{} successfully created with ID: {}",
+            T::ENTITY_NAME,
+            new_id
+        ),
+        Err(e) => println!(
+            "An error occured while creating new {} : {}",
+            T::ENTITY_NAME,
+            e
+        ),
+    }
 }
+// async fn show_created_user(user: User) {
+//     let pool = connect_to_db().await.unwrap();
+//     let new_user = match create_user(&pool, &user).await {
+//         Ok(new_user_id) => new_user_id,
+//         Err(e) => {
+//             println!("An Error Occured: {}", e);
+//             return;
+//         }
+//     };
+//
+//     println!("User successfully created with ID: {}", new_user);
+// }
+//
+// async fn show_created_project(project: Project) {
+//     let pool = connect_to_db().await.unwrap();
+//     let new_project =
+//         match create_project(&pool, &project.name, &project.key, project.owner_id).await {
+//             Ok(project_id) => project_id,
+//             Err(e) => {
+//                 println!("An error occured while creating a new project: {}", e);
+//                 return;
+//             }
+//         };
+//
+//     println!("Project successfully created with ID: {}", new_project);
+// }

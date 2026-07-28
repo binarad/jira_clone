@@ -1,3 +1,6 @@
+pub mod operations;
+pub mod traits;
+
 #[cfg(test)]
 mod tests {
     use sqlx::PgPool;
@@ -192,6 +195,7 @@ mod tests {
             email: "johndoepool@gmail.com".to_string(),
             password_hash: "29299ajajasdasdaaaaaaakakak".to_string(),
             created_at: chrono::Utc::now(),
+            ..Default::default()
         };
 
         let result = create_user(&pool, &new_user).await.unwrap();
@@ -199,8 +203,6 @@ mod tests {
         assert!(result > 0);
     }
 }
-
-pub mod operations;
 
 use thiserror::Error;
 #[derive(Error, Debug)]

@@ -68,17 +68,23 @@ pub async fn get_all_projects(pool: &PgPool) -> Result<Vec<Project>, DbError> {
 // }
 pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, DbError> {
     let new_user = sqlx::query!(
-        "INSERT INTO users (username, role, email, password_hash, created_at) VALUES ($1, $2, $3, $4, $5) RETURNING id",
+        "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING id",
         user.username,
         user.role,
         user.email,
         user.password_hash,
-        user.created_at,
+        // user.created_at,
     ).fetch_one(pool).await?;
 
     Ok(new_user.id)
 }
 
+pub async fn delete_user(pool: &PgPool, user_id: i32) -> Result<(), DbError> {
+    sqlx::query!("DELETE FROM users WHERE id = $1", user_id)
+        .execute(pool)
+        .await?;
+    Ok(())
+}
 pub async fn get_all_users(pool: &PgPool) -> Result<Vec<User>, DbError> {
     let records = sqlx::query!("SELECT * FROM users").fetch_all(pool).await?;
 

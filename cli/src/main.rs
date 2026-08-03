@@ -1,11 +1,13 @@
 use clap::Parser;
 use comfy_table::{
-    Attribute, Cell, CellAlignment, Color, Color::Rgb, ColumnConstraint, Table, Width::Fixed,
+    Attribute, Cell, CellAlignment, Color, ColumnConstraint, Table, Width::Fixed,
     modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL,
 };
 use db::{
     connect_to_db,
-    operations::{get_all_projects, get_all_users, get_project_issues, read_user_projects},
+    operations::{
+        delete_user, get_all_projects, get_all_users, get_project_issues, read_user_projects,
+    },
     traits::Creatable,
 };
 use jira_core::{issue::IssuePriority, issue::IssueStatus, project::Project, user::User};
@@ -15,10 +17,15 @@ enum Operation {
     /// Prints list of all users
     Users,
 
-    /// Create User
+    /// Create user
     CreateUser {
         #[command(flatten)]
         user: User,
+    },
+
+    /// Delete user by User_ID
+    DeleteUser {
+        user_id: i32,
     },
 
     /// Create a new project
@@ -56,6 +63,7 @@ async fn main() {
         Operation::UserProject { user_id } => show_user_projects(user_id).await,
         // Operation::CreateUser { user } => show_created_user(user).await,
         Operation::CreateUser { user } => show_created_entity(user).await,
+        Operation::DeleteUser { user_id } => show_deleted_user(user_id).await,
         Operation::CreateProject { project } => show_created_entity(project).await,
         Operation::Projects => show_projects().await,
         Operation::Board { project_id } => board_view_test(project_id).await,
@@ -244,4 +252,12 @@ async fn show_projects() {
         ]);
     }
     println!("{table}")
+}
+
+async fn show_deleted_user(user_id: i32) {
+    let pool = connect_to_db().await.unwrap();
+    match delete_user(&pool, user_id).await {
+        Ok(()) => println!("User with ID: {} was successfully deleted ", user_id),
+        Err(_) => println!("An unexpected error happened while deleting an user"),
+    }
 }

@@ -1,8 +1,8 @@
 use crate::{
     DbError,
-    operations::{create_project, create_user},
+    operations::{create_issue, create_project, create_user},
 };
-use jira_core::{project::Project, user::User}; // TO-DO add creatable for Issue
+use jira_core::{issue::Issue, project::Project, user::User}; // TO-DO add creatable for Issue
 use sqlx::PgPool;
 
 pub trait Creatable {
@@ -24,5 +24,12 @@ impl Creatable for Project {
     const ENTITY_NAME: &'static str = "Project";
     async fn create_in_db(&self, pool: &PgPool) -> Result<i32, DbError> {
         create_project(pool, &self.name, &self.key, self.owner_id).await
+    }
+}
+
+impl Creatable for Issue {
+    const ENTITY_NAME: &'static str = "Issue";
+    async fn create_in_db(&self, pool: &PgPool) -> Result<i32, DbError> {
+        create_issue(pool, self).await
     }
 }

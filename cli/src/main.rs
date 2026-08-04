@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{Parser, Subcommand};
 use comfy_table::{
     Attribute, Cell, CellAlignment, Color, ColumnConstraint, Table, Width::Fixed,
     modifiers::UTF8_ROUND_CORNERS, presets::UTF8_FULL,
@@ -10,41 +10,71 @@ use db::{
     },
     traits::Creatable,
 };
-use jira_core::{issue::IssuePriority, issue::IssueStatus, project::Project, user::User};
+use jira_core::{
+    issue::{Issue, IssuePriority, IssueStatus},
+    project::Project,
+    user::User,
+};
 
-#[derive(Parser, Debug)]
+#[derive(Subcommand, Debug)]
 enum Operation {
-    /// Prints list of all users
-    Users,
+    /// Manage Users
+    User {
+        #[command(subcommand)]
+        action: UserAction,
+    },
 
-    /// Create user
+    /// Manage Projects
+    Project {
+        #[command(subcommand)]
+        action: ProjectAction,
+    },
+
+    /// Manage Issues
+    Issue {
+        #[command(subcommand)]
+        action: IssueAction,
+    },
+}
+
+#[derive(Subcommand, Debug)]
+enum UserAction {
+    /// Prints list of all users
+    List,
+    /// Create User
     CreateUser {
         #[command(flatten)]
         user: User,
     },
 
-    /// Delete user by User_ID
-    DeleteUser {
-        user_id: i32,
-    },
+    /// Delete user by User ID
+    Delete { user_id: i32 },
 
-    /// Create a new project
-    CreateProject {
+    /// Prints user related projects
+    Projects { user_id: i32 },
+}
+
+#[derive(Subcommand, Debug)]
+enum ProjectAction {
+    /// Prints all existing projects
+    List,
+
+    /// Create a new projects
+    Create {
         #[command(flatten)]
         project: Project,
     },
 
-    // Prints all existing projects
-    Projects,
-
-    /// Prints user related projects
-    UserProject {
-        user_id: i32,
-    },
-
     /// Shows issues board by the project
-    Board {
-        project_id: i32,
+    Board { project_id: i32 },
+}
+
+#[derive(Subcommand, Debug)]
+enum IssueAction {
+    /// Create new issue for the project
+    Create {
+        #[command(flatten)]
+        issue: Issue,
     },
 }
 
@@ -58,16 +88,25 @@ struct Args {
 #[tokio::main]
 async fn main() {
     let args = Args::parse();
+
     match args.operation {
-        Operation::Users => show_all_users().await,
-        Operation::UserProject { user_id } => show_user_projects(user_id).await,
-        // Operation::CreateUser { user } => show_created_user(user).await,
-        Operation::CreateUser { user } => show_created_entity(user).await,
-        Operation::DeleteUser { user_id } => show_deleted_user(user_id).await,
-        Operation::CreateProject { project } => show_created_entity(project).await,
-        Operation::Projects => show_projects().await,
-        Operation::Board { project_id } => board_view_test(project_id).await,
-    };
+        Operation::User { action } => match action {
+            UserAction::List => show_all_users().await,
+            UserAction::CreateUser { user } => show_created_entity(user).await,
+            UserAction::Delete { user_id } => show_deleted_user(user_id).await,
+            UserAction::Projects { user_id } => show_user_projects(user_id).await,
+        },
+
+        Operation::Project { action } => match action {
+            ProjectAction::List => show_projects().await,
+            ProjectAction::Create { project } => show_created_entity(project).await,
+            ProjectAction::Board { project_id } => board_view_test(project_id).await,
+        },
+
+        Operation::Issue { action } => match action {
+            IssueAction::Create { issue } => show_created_entity(issue).await,
+        },
+    }
 }
 
 async fn show_all_users() {

@@ -1,26 +1,39 @@
 use anyhow::Result;
+use clap::Args;
 use serde::{Deserialize, Serialize};
 use std::str::FromStr;
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, Args)]
 pub struct Issue {
+    #[arg(skip)]
     pub id: i32,
+    #[arg(short, long)]
     pub project_id: i32,
+    #[arg(short, long)]
     pub issue_number: i32,
 
     // Issue metadata
+    #[arg(long)]
     pub issue_type: IssueType,
+    #[arg(short, long)]
     pub summary: String,
+    #[arg(short, long)]
     pub description: Option<String>,
+    #[arg(long)]
     pub status: IssueStatus,
+    #[arg(long)]
     pub priority: IssuePriority,
 
     // Users involved
+    #[arg(short, long)]
     pub assignee_id: Option<i32>,
+    #[arg(short, long)]
     pub reporter_id: i32,
 
     // Timestamps
+    #[arg(skip)]
     pub created_at: chrono::DateTime<chrono::Utc>,
+    #[arg(skip)]
     pub updated_at: chrono::DateTime<chrono::Utc>,
 }
 

@@ -7,9 +7,9 @@
 - [ ] Design Goal: Blazing fast, keyboard-centric, and distraction-free (anti-Jira).
 
 ## Phase 0: Preparations & Tooling
-- [ ] Set up rust-analyzer in your editor for strict type-checking and macro expansion.
-- [ ] Read up on the Elm Architecture (Model-Update-View) used by Iced.
-- [ ] Review sqlx documentation on compile-time checked queries.
+- [x] Set up rust-analyzer in your editor for strict type-checking and macro expansion.
+- [x] Read up on the Elm Architecture (Model-Update-View) used by Iced.
+- [x] Review sqlx documentation on compile-time checked queries.
 - [x] Create the docker-compose.yml for local PostgreSQL development.
 
 ## Phase 1: Data Layer & Schema (The Foundation)

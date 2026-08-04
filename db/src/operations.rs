@@ -43,29 +43,6 @@ pub async fn get_all_projects(pool: &PgPool) -> Result<Vec<Project>, DbError> {
     Ok(projects)
 }
 
-// MAYBE I'll use it later
-//
-// pub async fn get_all_projects_by_owner(
-//     pool: &PgPool,
-//     user_id: i32,
-// ) -> Result<Vec<Project>, DbError> {
-//     let records = sqlx::query!("SELECT * FROM projects WHERE owner_id = $1", user_id)
-//         .fetch_all(pool)
-//         .await?;
-//
-//     let mut filtered_projects = Vec::new();
-//
-//     for record in records {
-//         filtered_projects.push(Project {
-//             id: record.id,
-//             name: record.name,
-//             key: record.key,
-//             owner_id: record.owner_id,
-//             created_at: record.created_at,
-//         });
-//     }
-//     Ok(filtered_projects)
-// }
 pub async fn create_user(pool: &PgPool, user: &User) -> Result<i32, DbError> {
     let new_user = sqlx::query!(
         "INSERT INTO users (username, role, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING id",

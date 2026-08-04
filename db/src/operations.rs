@@ -129,7 +129,7 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
         let issue = Issue {
             id: record.id,
             project_id: record.project_id,
-            issue_number: record.issue_number,
+            issue_number: Some(record.issue_number),
             // Issue Metadata
             issue_type: IssueType::from_str(&record.issue_type)
                 .map_err(|_| anyhow::anyhow!("Invalid issue type: {}", record.issue_type))?,
@@ -154,14 +154,17 @@ pub async fn get_project_issues(pool: &PgPool, project_id: i32) -> Result<Vec<Is
     Ok(issues)
 }
 
-pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
+pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<(i32, i32), DbError> {
     let status_str = issue.status.as_str();
     let priority_str = issue.priority.as_str();
     let issue_type_str = issue.issue_type.as_str();
     let result = sqlx::query!(
-        "INSERT INTO issues (project_id, issue_number, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id",
+        r#"INSERT INTO issues (project_id, issue_type, summary, description, status, priority, assignee_id, reporter_id, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        RETURNING id, issue_number
+        "#,
         issue.project_id,
-        issue.issue_number,
+        // issue.issue_number,
         issue_type_str,
         issue.summary,
         issue.description.as_deref(),
@@ -174,7 +177,7 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> 
     )
     .fetch_one(pool)
     .await?;
-    Ok(result.id)
+    Ok((result.id, result.issue_number))
 }
 
 pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
@@ -182,9 +185,8 @@ pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> 
     let priority_str = issue.priority.as_str();
     let issue_type_str = issue.issue_type.as_str();
     let result = sqlx::query!(
-        "UPDATE issues SET project_id = $1, issue_number = $2, issue_type = $3, summary = $4, description = $5, status = $6, priority = $7, assignee_id = $8, reporter_id = $9, created_at = $10, updated_at = $11 WHERE id = $12 RETURNING id",
+        "UPDATE issues SET project_id = $1, issue_type = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, reporter_id = $8, updated_at = $9 WHERE id = $10 RETURNING id",
         issue.project_id,
-        issue.issue_number,
         issue_type_str,
         issue.summary,
         issue.description.as_deref(),
@@ -192,7 +194,6 @@ pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> 
         priority_str,
         issue.assignee_id,
         issue.reporter_id,
-        issue.created_at,
         issue.updated_at,
         issue.id,
     )

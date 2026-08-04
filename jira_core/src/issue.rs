@@ -10,7 +10,7 @@ pub struct Issue {
     #[arg(short, long)]
     pub project_id: i32,
     #[arg(short, long)]
-    pub issue_number: i32,
+    pub issue_number: Option<i32>,
 
     // Issue metadata
     #[arg(long)]

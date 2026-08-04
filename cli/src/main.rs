@@ -15,6 +15,7 @@ use jira_core::{
     project::Project,
     user::User,
 };
+use std::fmt::Debug;
 
 #[derive(Subcommand, Debug)]
 enum Operation {
@@ -50,7 +51,7 @@ enum UserAction {
     /// Delete user by User ID
     Delete { user_id: i32 },
 
-    /// Prints user related projects
+    /// Prints user related projects by user ID
     Projects { user_id: i32 },
 }
 
@@ -65,7 +66,7 @@ enum ProjectAction {
         project: Project,
     },
 
-    /// Shows issues board by the project
+    /// Shows issues board by the project ID
     Board { project_id: i32 },
 }
 
@@ -158,12 +159,15 @@ async fn show_user_projects(user_id: i32) {
     println!("{table}")
 }
 
-async fn show_created_entity<T: Creatable>(entity: T) {
+async fn show_created_entity<T: Creatable>(entity: T)
+where
+    T::Output: Debug,
+{
     let pool = connect_to_db().await.unwrap();
 
     match entity.create_in_db(&pool).await {
         Ok(new_id) => println!(
-            "{} successfully created with ID: {}",
+            "{} successfully created with ID: {:?}",
             T::ENTITY_NAME,
             new_id
         ),
@@ -247,7 +251,7 @@ async fn board_view_test(project_id: i32) {
         };
 
         table.add_row(vec![
-            Cell::new(issue.issue_number),
+            Cell::new(issue.issue_number.unwrap()),
             Cell::new(issue.issue_type.as_str()),
             Cell::new(issue.summary),
             Cell::new(issue.description.unwrap_or_else(|| "N/A".to_string())),

@@ -1,4 +1,4 @@
-use jira_core::{project::Project, user::User};
+use jira_core::user::User;
 use sqlx::PgPool;
 
 #[derive(Debug, Clone)]

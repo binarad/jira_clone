@@ -1,50 +1,44 @@
 use anyhow::Result;
-use clap::Args;
+use clap::{Args, ValueEnum};
 use serde::{Deserialize, Serialize};
+use std::fmt::Display;
 use std::str::FromStr;
 
 #[derive(Debug, Clone, Serialize, Deserialize, Args)]
 pub struct Issue {
-    #[arg(skip)]
     pub id: i32,
-    #[arg(short, long)]
     pub project_id: i32,
-    #[arg(short, long)]
     pub issue_number: Option<i32>,
 
     // Issue metadata
-    #[arg(long)]
     pub issue_type: IssueType,
-    #[arg(short, long)]
     pub summary: String,
-    #[arg(short, long)]
     pub description: Option<String>,
-    #[arg(long)]
     pub status: IssueStatus,
-    #[arg(long)]
     pub priority: IssuePriority,
 
     // Users involved
-    #[arg(short, long)]
     pub assignee_id: Option<i32>,
-    #[arg(short, long)]
     pub reporter_id: i32,
 
     // Timestamps
-    #[arg(skip)]
     pub created_at: chrono::DateTime<chrono::Utc>,
-    #[arg(skip)]
     pub updated_at: chrono::DateTime<chrono::Utc>,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(ValueEnum, Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Default)]
 pub enum IssueStatus {
+    #[default]
     Open,
     InProgress,
     Resolved,
     Closed,
 }
-
+impl Display for IssueStatus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.as_str())
+    }
+}
 impl IssueStatus {
     pub fn as_str(&self) -> &str {
         match self {
@@ -111,6 +105,7 @@ pub enum IssueType {
 
 impl IssueType {
     pub fn as_str(&self) -> &str {
+        // TODO MAKE A PROPER VALIDATION
         match self {
             IssueType::Bug => "Bug",
             IssueType::Task => "Task",

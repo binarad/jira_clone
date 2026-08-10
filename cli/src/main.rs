@@ -11,11 +11,17 @@ use db::{
     traits::Creatable,
 };
 use jira_core::{
-    issue::{Issue, IssuePriority, IssueStatus},
+    issue::{IssuePriority, IssueStatus},
     project::Project,
     user::User,
 };
 use std::fmt::Debug;
+
+use crate::commands::{
+    ChangeIssueStatusCmd, CreateIssueCmd, handle_create_issue, handle_issue_status_change,
+};
+
+pub mod commands;
 
 #[derive(Subcommand, Debug)]
 enum Operation {
@@ -75,7 +81,13 @@ enum IssueAction {
     /// Create new issue for the project
     Create {
         #[command(flatten)]
-        issue: Issue,
+        issue: CreateIssueCmd,
+    },
+
+    /// Change issue status by the issue ID
+    ChangeStatus {
+        #[command(flatten)]
+        cmd: ChangeIssueStatusCmd,
     },
 }
 
@@ -105,7 +117,8 @@ async fn main() {
         },
 
         Operation::Issue { action } => match action {
-            IssueAction::Create { issue } => show_created_entity(issue).await,
+            IssueAction::Create { issue } => handle_create_issue(issue).await,
+            IssueAction::ChangeStatus { cmd } => handle_issue_status_change(cmd).await,
         },
     }
 }
@@ -153,7 +166,6 @@ async fn show_user_projects(user_id: i32) {
             project.name,
             project.created_at.to_string(),
         ]);
-        // println!("{:?}", project);
     }
 
     println!("{table}")
@@ -186,6 +198,7 @@ async fn board_view_test(project_id: i32) {
     table.load_preset(UTF8_FULL);
     table.apply_modifier(UTF8_ROUND_CORNERS);
     let header_names = vec![
+        "ID",
         "#",
         "Type",
         "Summary",
@@ -198,14 +211,14 @@ async fn board_view_test(project_id: i32) {
         "Updated At",
     ];
 
-    // 2. Map them into styled Cells
+    // Map them into styled Cells
     let styled_headers = header_names.into_iter().map(|name| {
         Cell::new(name)
             .add_attribute(Attribute::Bold)
             .set_alignment(CellAlignment::Center)
     });
 
-    // 3. Set the styled cells as your header
+    // Set the styled cells as your header
     table.set_header(styled_headers);
     if let Some(summary_col) = table.column_mut(2) {
         summary_col.set_constraint(ColumnConstraint::Absolute(Fixed(40)));
@@ -230,7 +243,7 @@ async fn board_view_test(project_id: i32) {
             }), // Green
             IssueStatus::Closed => Cell::new("Closed").fg(Color::Grey),
         };
-        // 2. Style the Priority
+        // Style the Priority
         let priority_cell = match issue.priority {
             IssuePriority::Low => Cell::new("Low").fg(Color::DarkGrey),
             IssuePriority::Medium => Cell::new("Medium").fg(Color::Rgb {
@@ -251,6 +264,7 @@ async fn board_view_test(project_id: i32) {
         };
 
         table.add_row(vec![
+            Cell::new(issue.id),
             Cell::new(issue.issue_number.unwrap()),
             Cell::new(issue.issue_type.as_str()),
             Cell::new(issue.summary),

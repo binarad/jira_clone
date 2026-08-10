@@ -180,12 +180,19 @@ pub async fn create_issue(pool: &PgPool, issue: &Issue) -> Result<(i32, i32), Db
     Ok((result.id, result.issue_number))
 }
 
+// TODO: Do I need this?
 pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> {
     let status_str = issue.status.as_str();
     let priority_str = issue.priority.as_str();
     let issue_type_str = issue.issue_type.as_str();
     let result = sqlx::query!(
-        "UPDATE issues SET project_id = $1, issue_type = $2, summary = $3, description = $4, status = $5, priority = $6, assignee_id = $7, reporter_id = $8, updated_at = $9 WHERE id = $10 RETURNING id",
+        r#"UPDATE issues
+       SET project_id = $1, issue_type = $2,
+       summary = $3, description = $4,
+       status = $5, priority = $6,
+       assignee_id = $7, reporter_id = $8,
+       updated_at = $9 WHERE id = $10
+       RETURNING id"#,
         issue.project_id,
         issue_type_str,
         issue.summary,
@@ -200,4 +207,24 @@ pub async fn update_issue(pool: &PgPool, issue: &Issue) -> Result<i32, DbError> 
     .fetch_one(pool)
     .await?;
     Ok(result.id)
+}
+
+pub async fn update_issue_status(
+    pool: &PgPool,
+    issue_id: i32,
+    new_status: &IssueStatus,
+) -> Result<(), DbError> {
+    let status_str = new_status.as_str();
+    let timestamp = chrono::Utc::now();
+
+    sqlx::query!(
+        "UPDATE issues SET status = $1, updated_at = $2 WHERE id = $3",
+        status_str,
+        timestamp,
+        issue_id
+    )
+    .execute(pool)
+    .await?;
+
+    Ok(())
 }

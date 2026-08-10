@@ -12,3 +12,4 @@ dotenvy = { workspace = true }
 jira_core = { path = "../jira_core" }
 serde.workspace = true
 tokio.workspace = true
+chrono.workspace = true

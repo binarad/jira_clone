@@ -11,5 +11,10 @@ jira_core = { path = "../jira_core" }
 sqlx = { workspace = true }
 thiserror = { workspace = true }
 
+# Hashing
+argon2.workspace = true
+password-hash.workspace = true
+rand_core.workspace = true
+
 [dev-dependencies]
 tokio = { workspace = true }

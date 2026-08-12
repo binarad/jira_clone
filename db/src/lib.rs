@@ -193,3 +193,36 @@ pub async fn connect_to_db() -> Result<PgPool> {
         .context("Failed to establish a connection to Postgres. Is docker running?")?;
     Ok(pool)
 }
+
+use argon2::{
+    Argon2,
+    password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString, rand_core::OsRng},
+};
+
+pub fn hash_password(password: &str) -> Result<String, argon2::password_hash::Error> {
+    // Generate a cryptographically secure salt
+    let salt = SaltString::generate(&mut OsRng);
+
+    // Argon2 with default parameters
+    let argon2 = Argon2::default();
+
+    // Hash the password and format it as a PHC string
+    let password_hash = argon2
+        .hash_password(password.as_bytes(), &salt)?
+        .to_string();
+
+    Ok(password_hash)
+}
+
+pub fn verify_password(password: &str, stored_hash: &str) -> bool {
+    // Parse stored hash string back into a PasswordHash object
+    let parced_hash = match PasswordHash::new(stored_hash) {
+        Ok(hash) => hash,
+        Err(_) => return false,
+    };
+
+    // Verify it against the plain-text password
+    Argon2::default()
+        .verify_password(password.as_bytes(), &parced_hash)
+        .is_ok()
+}

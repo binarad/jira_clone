@@ -13,3 +13,10 @@ jira_core = { path = "../jira_core" }
 serde.workspace = true
 tokio.workspace = true
 chrono.workspace = true
+
+# TUI things
+ratatui = "0.30.2"
+crossterm = "0.29.0"
+color-eyre = "0.6.5"
+
+
